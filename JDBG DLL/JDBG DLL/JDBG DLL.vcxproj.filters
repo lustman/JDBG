@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\pipeline">
+      <UniqueIdentifier>{7a869435-73b4-4261-bad7-6bdff9534d1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pipeline">
+      <UniqueIdentifier>{043f3d59-425d-4fb3-847b-3228a6bb54b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pipeline\impl">
+      <UniqueIdentifier>{523a9255-1fe5-426a-a9d6-3700927855e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pipeline\impl">
+      <UniqueIdentifier>{cfdea2ff-c161-4212-aeb3-ae5fe099c045}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pipeline\impl\jdbg">
+      <UniqueIdentifier>{31211677-3a17-4d93-a34d-dd1a12cfd284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pipeline\impl\jdbg\handler">
+      <UniqueIdentifier>{640fed2a-bbca-46f3-9d1f-f6a7b3dded09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pipeline\impl\jdbg">
+      <UniqueIdentifier>{23390abf-e444-4aad-9b98-355e1bb9d127}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pipeline\impl\jdbg\handler">
+      <UniqueIdentifier>{82b861a6-1fe1-41e4-9eba-1723ee22849d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pipeline.cpp">
+      <Filter>Source Files\pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="handlerclassnames.h">
+      <Filter>Header Files\pipeline\impl\jdbg\handler</Filter>
+    </ClCompile>
+    <ClCompile Include="handlerclassnames.cpp">
+      <Filter>Source Files\pipeline\impl\jdbg\handler</Filter>
+    </ClCompile>
+    <ClCompile Include="handlerclassdata.cpp">
+      <Filter>Source Files\pipeline\impl\jdbg\handler</Filter>
+    </ClCompile>
+    <ClCompile Include="handlertagobjects.cpp">
+      <Filter>Source Files\pipeline\impl\jdbg\handler</Filter>
+    </ClCompile>
+    <ClCompile Include="objecthandler.cpp">
+      <Filter>Source Files\pipeline\impl\jdbg</Filter>
+    </ClCompile>
+    <ClCompile Include="logpipeline.cpp">
+      <Filter>Source Files\pipeline\impl\jdbg</Filter>
+    </ClCompile>
+    <ClCompile Include="handlergetreferences.cpp">
+      <Filter>Source Files\pipeline\impl\jdbg\handler</Filter>
+    </ClCompile>
+    <ClCompile Include="jdbgpipeline.cpp">
+      <Filter>Source Files\pipeline\impl\jdbg</Filter>
+    </ClCompile>
+    <ClCompile Include="handlerobjectfields.cpp">
+      <Filter>Source Files\pipeline\impl\jdbg\handler</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pipeline.h">
+      <Filter>Header Files\pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="jdbgpipeline.h">
+      <Filter>Header Files\pipeline\impl\jdbg</Filter>
+    </ClInclude>
+    <ClInclude Include="handler.h">
+      <Filter>Header Files\pipeline\impl\jdbg</Filter>
+    </ClInclude>
+    <ClInclude Include="handlerclassdata.h">
+      <Filter>Header Files\pipeline\impl\jdbg\handler</Filter>
+    </ClInclude>
+    <ClInclude Include="handlertagobjects.h">
+      <Filter>Header Files\pipeline\impl\jdbg\handler</Filter>
+    </ClInclude>
+    <ClInclude Include="exprtk.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="objecthandler.h">
+      <Filter>Header Files\pipeline\impl\jdbg</Filter>
+    </ClInclude>
+    <ClInclude Include="logpipeline.h">
+      <Filter>Header Files\pipeline\impl\jdbg</Filter>
+    </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="handlergetreferences.h">
+      <Filter>Header Files\pipeline\impl\jdbg\handler</Filter>
+    </ClInclude>
+    <ClInclude Include="handlerobjectfields.h">
+      <Filter>Header Files\pipeline\impl\jdbg\handler</Filter>
+    </ClInclude>
+    <ClInclude Include="json.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
