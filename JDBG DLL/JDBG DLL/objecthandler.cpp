@@ -28,12 +28,13 @@ jint JNICALL iterateHeap(jlong class_tag, jlong size, jlong* tag_ptr, jint lengt
 }
 
 int idx = 0;
+int exceeded = 0;
 
 jint JNICALL untag(jlong class_tag, jlong size, jlong* tag_ptr, jint length, void* user_data) {
 	std::vector<int>* tags = (std::vector<int>*)user_data;
 
 	if (idx >= tags->size()) {
-		MessageBoxA(nullptr, "Idx exceeded tag preservation vector size", "Insider", MB_ICONERROR);
+		exceeded++;
 		return JVMTI_VISIT_OBJECTS;
 	}
 
@@ -69,9 +70,14 @@ void ObjectHandler::populateMap(jclass& klass, char* klassName) {
 	jvmti->Deallocate((unsigned char*)objPtr);
 
 	idx = 0;
+	exceeded = 0;
 	// untag objects
 	callbacks.heap_iteration_callback = &untag;
 	jvmti->IterateThroughHeap(0, klass, &callbacks, &tagPreservation);
+
+	if (exceeded > 0) {
+		msgLog("Bad: idx exceeded in tag preservation by: " + std::to_string(idx));
+	}
 }
 
 int objectTags = 0;

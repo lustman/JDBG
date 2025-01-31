@@ -1,31 +1,152 @@
 package org.jdbg.gui.tabs.objectanalysis.objinfo;
 
+import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
+import com.mxgraph.layout.mxCircleLayout;
+import com.mxgraph.layout.mxCompactTreeLayout;
+import com.mxgraph.layout.mxFastOrganicLayout;
+import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGeometry;
+import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.view.mxStylesheet;
+import org.jdbg.core.Util;
+import org.jdbg.core.pipeline.response.FieldData;
+import org.jdbg.core.pipeline.response.FieldResponseData;
+import org.jdbg.core.pipeline.response.SubGraphData;
+import org.jdbg.gui.tabs.objectanalysis.objinfo.graph.HeapEdge;
+import org.jdbg.gui.tabs.objectanalysis.objinfo.graph.HeapVertex;
+import org.jdbg.gui.tabs.objectanalysis.objlist.TagItem;
+import org.jgrapht.Graph;
+import org.jgrapht.ext.JGraphXAdapter;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.util.Map;
 
 public class ObjectInfo extends JPanel {
 
 
-    public ObjectInfo() {
+    public ObjectInfo(TagItem tagItem, FieldResponseData fields, Map<Integer, SubGraphData> graphData) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBorder(new ObjInfoBorder("Misc"));
-        panel.add(new ObjectStringInfo("hello"));
-        panel.add(new ObjectStringInfo("hello"));
+        panel.setBorder(new ObjInfoBorder(tagItem.toString()));
+        panel.add(new ObjectStringInfo("Object Value: " + (fields.value == null ? "N/A" : "\"" + fields.value + "\"")));
+        panel.add(new ObjectStringInfo("Object Tag: " + tagItem.getTag()));
 
         panel.setMaximumSize(new Dimension(10000, 500));
         add(panel);
 
-        JTable table = new JTable(new String[][] {{"1", "2", "3"}, {"1", "2", "3"}, {"1", "2", "3"}}, new String[] {"Signature", "Name", "Value"});
+
+        String[][] str = new String[fields.fields.size()][3];
+
+        int i = 0;
+        for(Map.Entry<String, FieldData> data : fields.fields.entrySet()) {
+            str[i][0]=data.getValue().signature;
+            str[i][1]=data.getKey();
+            str[i][2]=data.getValue().value;
+
+            i++;
+        }
+
+        JTable table = new JTable(str, new String[] {"Signature", "Name", "Value"});
         JScrollPane scrollPane = new JScrollPane(table, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBorder(new ObjInfoBorder("Fields"));
-        table.setBackground(getBackground());
+
+        table.setFont(new Font(getFont().getName(), getFont().getStyle(), getFont().getSize()+4));
+
+        scrollPane.setPreferredSize(new Dimension(getWidth(), 100));
 
         add(scrollPane);
+        createGraph(graphData);
+    }
+
+    void createGraph(Map<Integer, SubGraphData> graphData) {
+        Graph<HeapVertex, HeapEdge> g = new DefaultDirectedGraph<>(HeapEdge.class);
+
+        for(Map.Entry<Integer, SubGraphData> entry : graphData.entrySet()) {
+            g.addVertex(new HeapVertex(entry.getKey(), entry.getValue().className.substring(0, entry.getValue().className.length()-1)));
+
+        }
+
+        Map.Entry<Integer, SubGraphData> rootNode = null;
+        for(Map.Entry<Integer, SubGraphData> entry : graphData.entrySet()) {
+            if(rootNode==null)
+                rootNode=entry;
+            for(int i = 0 ; i < entry.getValue().adj.length; i++) {
+                g.addEdge(new HeapVertex(entry.getValue().adj[i]), new HeapVertex(entry.getKey()), new HeapEdge(entry.getValue().relationshipType[i]));
+            }
+        }
+
+        assert rootNode!=null;
+
+        mxConstants.DEFAULT_FONTSIZE = getFont().getSize()+3;
+
+
+
+        JGraphXAdapter<HeapVertex, HeapEdge> jGraphXAdapter = new JGraphXAdapter<>(g);
+
+        style(jGraphXAdapter);
+
+
+        mxGraphComponent component = new mxGraphComponent(jGraphXAdapter);
+
+        component.setBorder(new ObjInfoBorder("Heap Relationship"));
+        component.setConnectable(false);
+        component.getGraph().setAllowDanglingEdges(false);
+        add(component);
+
+
+        mxCompactTreeLayout layout = new mxCompactTreeLayout(jGraphXAdapter);
+        layout.setHorizontal(false);
+        layout.setEdgeRouting(false);
+        layout.setNodeDistance(50);
+        layout.setLevelDistance(30);
+
+        layout.execute(jGraphXAdapter.getDefaultParent());
+
+
+
+        Object[] ver = jGraphXAdapter.getChildVertices(jGraphXAdapter.getDefaultParent());
+        jGraphXAdapter.moveCells(ver, 270, 120, false);
+    }
+
+    void style(JGraphXAdapter<HeapVertex, HeapEdge> jGraphXAdapter) {
+        mxStylesheet stylesheet = jGraphXAdapter.getStylesheet();
+        Map<String, Object> vertexStyle = stylesheet.getDefaultVertexStyle();
+
+        vertexStyle.put(mxConstants.STYLE_FONTFAMILY, getFont().getFamily());
+        vertexStyle.put(mxConstants.STYLE_ROUNDED, true);
+        vertexStyle.put(mxConstants.STYLE_OPACITY, 20);
+        vertexStyle.put(mxConstants.STYLE_FONTCOLOR, Util.convertColorToHex(UIManager.getColor("TextField.foreground"))); // Red color
+        vertexStyle.put(mxConstants.STYLE_SPACING, 15);
+        vertexStyle.put(mxConstants.STYLE_SPACING_BOTTOM, 15);
+        vertexStyle.put(mxConstants.STYLE_SPACING_TOP, 15);
+        vertexStyle.put(mxConstants.STYLE_SPACING_LEFT, 15);
+        vertexStyle.put(mxConstants.STYLE_SPACING_RIGHT, 15);
+
+
+        for(Object obj : jGraphXAdapter.getChildVertices(jGraphXAdapter.getDefaultParent())) {
+            mxCell c = (mxCell) obj;
+            mxGeometry geo = c.getGeometry();
+            if(c.isVertex()) {
+                geo.setWidth(geo.getWidth()+30);
+                geo.setHeight(geo.getHeight()+15);
+
+            }
+        }
+
+
+        java.util.Map<String, Object> edgeStyle = stylesheet.getDefaultEdgeStyle();
+        edgeStyle.put(mxConstants.STYLE_FONTFAMILY, getFont().getFamily());
+        edgeStyle.put(mxConstants.STYLE_STROKECOLOR, Util.convertColorToHex(UIManager.getColor("TextField.foreground"))); // Red color
+        edgeStyle.put(mxConstants.STYLE_STROKEWIDTH, 2);
+        edgeStyle.put(mxConstants.STYLE_FONTCOLOR, Util.convertColorToHex(UIManager.getColor("TextField.foreground"))); // Red color
 
     }
 }

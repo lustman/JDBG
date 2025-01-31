@@ -90,9 +90,11 @@ bool filter(
 			if (sig == "Ljava/lang/String;") {
 				const char* ptr{ jni->GetStringUTFChars((jstring)object, NULL) };
 
-				std::string strVal{ ptr };
-				addOrUpdateString(var, std::move(strVal));
-				jni->ReleaseStringUTFChars((jstring)object, ptr);
+				if (ptr != nullptr) {
+					std::string strVal{ ptr };
+					addOrUpdateString(var, std::move(strVal));
+					jni->ReleaseStringUTFChars((jstring)object, ptr);
+				}
 			}
 		} };
 

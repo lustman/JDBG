@@ -2,11 +2,14 @@ package org.jdbg.core;
 
 
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jdbg.core.attach.AttachManager;
 import org.jdbg.core.pipeline.impl.main.PipelineMain;
 import org.jdbg.core.pipeline.response.FieldResponseData;
+import org.jdbg.core.pipeline.response.SubGraphData;
+import org.jdbg.core.util.Pair;
 import org.jdbg.gui.tabs.objectanalysis.objlist.TagItem;
 import org.jdbg.logger.Logger;
 
@@ -14,7 +17,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // the gui should interact with this only to achieve the goals
 public class CoreInterface {
@@ -117,7 +122,7 @@ public class CoreInterface {
 
 
 
-    public List<String> getReferences(TagItem item) {
+    public Map<Integer, SubGraphData> getReferences(TagItem item) {
         String klass = item.getKlass();
         klass += '\0';
 
@@ -137,7 +142,24 @@ public class CoreInterface {
         PipelineMain.ClientResponse response = PipelineMain.getInstance().sendAndAwait(PipelineMain.ServerCommand.GET_REFS,
                 buffer);
 
-        return new ArrayList<>();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Logger.log("response size: "+  response.response.length);
+
+
+            System.out.println(new String(response.response));
+            Map<String, SubGraphData> data = mapper.readValue(new String(response.response), new TypeReference<Map<String, SubGraphData>>() {});
+            Map<Integer, SubGraphData> map = new HashMap<>();
+
+            for(Map.Entry<String, SubGraphData> entry : data.entrySet()) {
+                map.put(Integer.valueOf(entry.getKey()), entry.getValue());
+            }
+            return map;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 

@@ -11,7 +11,9 @@ import java.awt.*;
 public class MainHeapPanel extends JPanel {
 
     ObjectListPanel list;
-    ObjectInfo objectInfo;
+    JPanel objectInfo;
+    JScrollPane objectInfoScrollPane;
+
     public MainHeapPanel(ObjectAnalysisClassTree tree) {
         setLayout(new GridBagLayout());
 
@@ -34,16 +36,15 @@ public class MainHeapPanel extends JPanel {
         g.weighty = 1;
         g.anchor = GridBagConstraints.SOUTHWEST;
 
-
-        objectInfo = new ObjectInfo();
-        add(new JScrollPane(objectInfo, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), g);
+        objectInfo = new JPanel();
+        objectInfoScrollPane = new JScrollPane(objectInfo, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        add(objectInfoScrollPane, g);
     }
 
     public void initObjectInfo(TagItem tagItem) {
-        CoreInterface.getInstance().getReferences(tagItem);
-        CoreInterface.getInstance().getFields(tagItem);
 
-
+        objectInfo = new ObjectInfo(tagItem,  CoreInterface.getInstance().getFields(tagItem), CoreInterface.getInstance().getReferences(tagItem));
+        objectInfoScrollPane.setViewportView(objectInfo);
     }
 
     public ObjectListPanel getObjectList() {

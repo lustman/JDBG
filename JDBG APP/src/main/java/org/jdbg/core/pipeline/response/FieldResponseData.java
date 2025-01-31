@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class FieldResponseData {
 
-    String value;
+    public String value;
     public Map<String, FieldData> fields;
 
 

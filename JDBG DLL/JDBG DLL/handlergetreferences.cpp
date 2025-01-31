@@ -2,6 +2,12 @@
 
 #include "handlergetreferences.h"
 #include <optional>
+#include "json.hpp"
+
+
+using json = nlohmann::basic_json<>;
+
+
 HandlerGetReferences::HandlerGetReferences(jvmtiEnv* jvmti, JNIEnv* jni, JdbgPipeline* pipeline) : ObjectHandler{ GET_REFS, jvmti, jni, pipeline } {
 
 }
@@ -13,6 +19,9 @@ struct GraphInfo {
 	std::vector<int> adj;
 	std::vector<char> relationshipType;
 	std::string className;
+
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(GraphInfo, adj, relationshipType, className)
+
 };
 
 
@@ -138,8 +147,20 @@ int HandlerGetReferences::handle(char* data, DWORD length, char* responseBuffer,
 
 	dfs(objTag, true, klassName, heapGraph, subGraph, visited, classTagMap);
 
-	msgLog("Subgraph node count: " + std::to_string(subGraph.size()));
+	
+	std::map<std::string, GraphInfo> newGraph;
+
+	for (const auto& entry : subGraph) {
+		newGraph.insert({ std::to_string(entry.first), entry.second });
+	}
 
 
-	return 0;
+	json response = newGraph;
+
+
+
+	std::string dump{ response.dump() };
+	std::memcpy((void*)responseBuffer, (void*)dump.c_str(), strlen(dump.c_str()));
+
+	return dump.size();
 }
