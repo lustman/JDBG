@@ -23,6 +23,7 @@ public class ObjectListPanel extends JPanel {
         Border verticalBorder =  new JTextField().getBorder(); // Top, Left, Bottom, Right
         setFont(new Font(getFont().getName(), getFont().getStyle(), getFont().getSize()+2));
 
+        setMinimumSize(new Dimension(300, 0));
         setBorder(verticalBorder);
 
 

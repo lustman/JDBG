@@ -109,6 +109,9 @@ public class CoreInterface {
         PipelineMain.ClientResponse response = PipelineMain.getInstance().sendAndAwait(PipelineMain.ServerCommand.GET_FIELDS,
                 buffer);
 
+        if(response.response.length==0) {
+            return null;
+        }
         try {
             ObjectMapper mapper = new ObjectMapper();
             Logger.log("response size: "+  response.response.length);
@@ -142,12 +145,15 @@ public class CoreInterface {
         PipelineMain.ClientResponse response = PipelineMain.getInstance().sendAndAwait(PipelineMain.ServerCommand.GET_REFS,
                 buffer);
 
+        if(response.response.length == 0) {
+            return null;
+        }
+
         try {
             ObjectMapper mapper = new ObjectMapper();
             Logger.log("response size: "+  response.response.length);
-
-
             System.out.println(new String(response.response));
+
             Map<String, SubGraphData> data = mapper.readValue(new String(response.response), new TypeReference<Map<String, SubGraphData>>() {});
             Map<Integer, SubGraphData> map = new HashMap<>();
 

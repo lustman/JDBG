@@ -1,12 +1,15 @@
 package org.jdbg.gui.tabs.objectanalysis;
 
 import org.jdbg.core.CoreInterface;
+import org.jdbg.core.pipeline.response.FieldResponseData;
+import org.jdbg.core.pipeline.response.SubGraphData;
 import org.jdbg.gui.tabs.objectanalysis.objinfo.ObjectInfo;
 import org.jdbg.gui.tabs.objectanalysis.objlist.ObjectListPanel;
 import org.jdbg.gui.tabs.objectanalysis.objlist.TagItem;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 
 public class MainHeapPanel extends JPanel {
 
@@ -42,8 +45,16 @@ public class MainHeapPanel extends JPanel {
     }
 
     public void initObjectInfo(TagItem tagItem) {
+        Map<Integer, SubGraphData> refs = CoreInterface.getInstance().getReferences(tagItem);
+        if(refs==null) {
+            return;
+        }
 
-        objectInfo = new ObjectInfo(tagItem,  CoreInterface.getInstance().getFields(tagItem), CoreInterface.getInstance().getReferences(tagItem));
+        FieldResponseData fields = CoreInterface.getInstance().getFields(tagItem);
+        if(fields==null) {
+            return;
+        }
+        objectInfo = new ObjectInfo(tagItem,  fields, refs);
         objectInfoScrollPane.setViewportView(objectInfo);
     }
 

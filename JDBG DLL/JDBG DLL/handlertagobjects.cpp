@@ -212,6 +212,10 @@ int HandlerTagObjects::handle(char* data, DWORD length, char* responseBuffer, st
 	jclass klass = pos->second;
 
 	if (!instanceMapInit[data]) {
+		if (instanceMap[data].size() > 0) {
+			msgLog("Something already existed.");
+		}
+
 		populateMap(klass, data);
 		instanceMapInit[data] = true;
 	}

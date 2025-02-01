@@ -78,6 +78,8 @@ void JdbgPipeline::startListen(jvmtiEnv* jvmti, JNIEnv* jni) {
 		h->setLogPipeline(&log);
 	}
 
+	log.addMessage("Thread id: " + std::to_string(GetThreadId(GetCurrentThread())));
+	log.flush();
 
 	constexpr int BUFFER_SIZE = 500;
 	constexpr int RESPONSE_BUFFER_SIZE = 50000000;

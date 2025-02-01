@@ -54,15 +54,17 @@ void HandlerObjectFields::buildFields(json& response, jclass& klass, jobject& ob
 
 			// is object
 			jobject fieldObject = jni->GetObjectField(obj, field);
+			/*
 			std::string cleanedSig{ signature.substr(1, signature.size() - 2) };
 
-			jweak newRef = jni->NewWeakGlobalRef(fieldObject);
 			int num = ++instanceMapTag[cleanedSig];
-			instanceMap[cleanedSig][num] = newRef;
+			instanceMap[cleanedSig][num] = fieldObject;
 
 			response["fields"][fieldName]["value"] = num;
+			*/
+			response["fields"][fieldName]["value"] = "Not Supported";
 
-			jni->DeleteLocalRef(fieldObject);
+
 		}
  } };
 

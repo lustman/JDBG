@@ -1,15 +1,15 @@
 #include "objecthandler.h"
 #include <string>
 #include <optional>
-constexpr int HEAP_TAG = 1000;
+#include <boost/unordered/unordered_flat_map.hpp>
+
+constexpr int HEAP_TAG = 2147483647;
 
 
 
-std::unordered_map<std::string, std::map<long, jweak>> ObjectHandler::instanceMap;
-
-std::unordered_map<std::string, bool> ObjectHandler::instanceMapInit;
-
-std::unordered_map<std::string, int> ObjectHandler::instanceMapTag;
+boost::unordered_flat_map<std::string, boost::unordered_flat_map<long, jobject>> ObjectHandler::instanceMap;
+boost::unordered_flat_map<std::string, bool> ObjectHandler::instanceMapInit;
+boost::unordered_flat_map<std::string, int> ObjectHandler::instanceMapTag;
 
 
 
@@ -22,7 +22,7 @@ std::vector<RelationshipData>* ObjectHandler::heapGraph;
 // based on assumption that iterate in same order, which should be true
 jint JNICALL iterateHeap(jlong class_tag, jlong size, jlong* tag_ptr, jint length, void* user_data) {
 	std::vector<int>* tags = (std::vector<int>*)user_data;
-	tags->push_back(*(tag_ptr));
+	tags->emplace_back(*(tag_ptr));
 	*tag_ptr = HEAP_TAG;
 	return JVMTI_VISIT_OBJECTS;
 }
@@ -58,12 +58,11 @@ void ObjectHandler::populateMap(jclass& klass, char* klassName) {
 	jvmti->GetObjectsWithTags(1, &tag, &objCount, &objPtr, NULL);
 
 
-	std::map<long, jweak>& theMap{ instanceMap[klassName] };
+	boost::unordered_flat_map<long, jobject>& theMap{ instanceMap[klassName] };
 
 	for (int i = 0; i < objCount; i++) {
 		jobject obj{ *(objPtr + i) };
-		jweak weak{ jni->NewWeakGlobalRef(obj) };
-		theMap.insert({ ++instanceMapTag[klassName], weak});
+		theMap.insert({ ++instanceMapTag[klassName], obj});
 	}
 
 
@@ -80,7 +79,7 @@ void ObjectHandler::populateMap(jclass& klass, char* klassName) {
 	}
 }
 
-int objectTags = 0;
+int objectTags = 1;
 int count = 0;
 int javaLangClassTag;
 
@@ -148,11 +147,19 @@ jint JNICALL referenceCallback(jvmtiHeapReferenceKind reference_kind,
 
 	if (referee_tag >= graph->size() || referrer_tag >= graph->size()) {
 		MessageBoxA(nullptr, "Insufficient Buffer Size", "Insider", MB_ICONERROR);
-		return JVMTI_VISIT_ABORT;;
+		return JVMTI_VISIT_ABORT;
 	}
 
-	(*graph)[referee_tag].referrers.push_back(referrer_tag);
-	(*graph)[referee_tag].referrersType.push_back((char)reference_kind);
+	char& idx{ (*graph)[referee_tag].idx };
+
+	if (idx < RelationshipData::SIZE) {
+		(*graph)[referee_tag].referrers[idx] = referrer_tag;
+		(*graph)[referee_tag].referrersType[idx] = (char)reference_kind;
+		idx++;
+	}
+	
+
+
 
 
 	//(*graph)[referrer_tag].referees.push_back(referee_tag);
@@ -202,7 +209,7 @@ void printTags(jvmtiEnv* jvmti) {
 		jclass klass = *(classes + i);
 		jvmti->GetTag(klass, &tag);
 
-
+		
 	}
 
 }
@@ -221,10 +228,11 @@ void ObjectHandler::buildHeapGraph() {
 	jvmti->IterateThroughHeap(0, NULL, &cb, NULL);
 
 
+
 	msgLog("Heap count: " + std::to_string(objectCount));
 
 
-	heapGraph = new std::vector<RelationshipData>(objectCount);
+	heapGraph = new std::vector<RelationshipData>(objectCount+1);
 
 	int classClassTag = tagClasses(classTagMap, jvmti);
 	msgLog("Tag map size: " + std::to_string(classTagMap.size()));
@@ -257,12 +265,12 @@ std::optional<std::pair<jclass, jobject>> ObjectHandler::getObject(long tag, cha
 
 	jclass klassObj{ klassMap[klass] };
 
-	if (instanceMap.find(klass) == instanceMap.end()) {
+	if (!instanceMap.count(klass)) {
 		msgLog("Klass not found in instance map");
 		return std::nullopt;
 	}
 
-	if (instanceMap[klass].find(tag) == instanceMap[klass].end()) {
+	if (!instanceMap[klass].count(tag)) {
 		msgLog("Tag not found. Instance map size: " + std::to_string(instanceMap[klass].size()));
 		msgLog("Tag: " + std::to_string(tag));
 		return std::nullopt;

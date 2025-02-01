@@ -9,22 +9,26 @@
 #include <set>
 #include <utility>
 #include <optional>
+#include <boost/unordered/unordered_flat_map.hpp>
+#include <array>
 
 
 struct RelationshipData {
+	static constexpr char SIZE = 7;
 	//std::vector<int> referees;
-	std::vector<int> referrers;
-	std::vector<char> referrersType; // jvmtiHeapReferenceKind
-	int klassTag;
+	std::array<int, SIZE> referrers;
+	std::array<char, SIZE> referrersType; // jvmtiHeapReferenceKind
+	char idx = 0;
+	int klassTag = 0;
 };
 
 class ObjectHandler : public Handler {
 protected:
-	static std::unordered_map<std::string, std::map<long, jweak>> instanceMap;
+	static boost::unordered_flat_map<std::string, boost::unordered_flat_map<long, jobject>> instanceMap;
 
-	static std::unordered_map<std::string, bool> instanceMapInit;
+	static boost::unordered_flat_map<std::string, bool> instanceMapInit;
 
-	static std::unordered_map<std::string, int> instanceMapTag;
+	static boost::unordered_flat_map<std::string, int> instanceMapTag;
 
 
 	static std::vector<RelationshipData>* heapGraph;

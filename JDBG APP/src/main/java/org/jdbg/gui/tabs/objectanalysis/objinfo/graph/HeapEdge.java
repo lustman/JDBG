@@ -8,7 +8,7 @@ public class HeapEdge extends DefaultEdge {
 
      enum EdgeType {
         CLASS,
-        FIELD,
+        INSTANCE_FIELD,
         ARRAY_ELEMENT,
         CLASS_LOADER,
         SIGNERS,

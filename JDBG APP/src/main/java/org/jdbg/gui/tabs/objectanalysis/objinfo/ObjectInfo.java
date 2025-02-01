@@ -70,50 +70,49 @@ public class ObjectInfo extends JPanel {
         Graph<HeapVertex, HeapEdge> g = new DefaultDirectedGraph<>(HeapEdge.class);
 
         for(Map.Entry<Integer, SubGraphData> entry : graphData.entrySet()) {
-            g.addVertex(new HeapVertex(entry.getKey(), entry.getValue().className.substring(0, entry.getValue().className.length()-1)));
+            g.addVertex(new HeapVertex(entry.getKey(), entry.getValue().origin, entry.getValue().isRoot));
 
         }
 
-        Map.Entry<Integer, SubGraphData> rootNode = null;
         for(Map.Entry<Integer, SubGraphData> entry : graphData.entrySet()) {
-            if(rootNode==null)
-                rootNode=entry;
             for(int i = 0 ; i < entry.getValue().adj.length; i++) {
-                g.addEdge(new HeapVertex(entry.getValue().adj[i]), new HeapVertex(entry.getKey()), new HeapEdge(entry.getValue().relationshipType[i]));
+                if(entry.getValue().adj[i] != 0)
+                    g.addEdge(new HeapVertex(entry.getValue().adj[i]), new HeapVertex(entry.getKey()), new HeapEdge(entry.getValue().relationshipType[i]));
             }
         }
 
-        assert rootNode!=null;
 
         mxConstants.DEFAULT_FONTSIZE = getFont().getSize()+3;
-
-
-
         JGraphXAdapter<HeapVertex, HeapEdge> jGraphXAdapter = new JGraphXAdapter<>(g);
+
+
 
         style(jGraphXAdapter);
 
 
         mxGraphComponent component = new mxGraphComponent(jGraphXAdapter);
-
+        component.setPanning(true);
+        component.setZoomPolicy(mxGraphComponent.ZOOM_POLICY_PAGE);
+        //component.setMaximumSize(new Dimension(500, 700));
         component.setBorder(new ObjInfoBorder("Heap Relationship"));
         component.setConnectable(false);
         component.getGraph().setAllowDanglingEdges(false);
+
         add(component);
 
-
+        /*
         mxCompactTreeLayout layout = new mxCompactTreeLayout(jGraphXAdapter);
         layout.setHorizontal(false);
         layout.setEdgeRouting(false);
         layout.setNodeDistance(50);
         layout.setLevelDistance(30);
+        */
 
+        mxHierarchicalLayout layout = new mxHierarchicalLayout(jGraphXAdapter);
+        layout.setDisableEdgeStyle(true);
         layout.execute(jGraphXAdapter.getDefaultParent());
 
-
-
-        Object[] ver = jGraphXAdapter.getChildVertices(jGraphXAdapter.getDefaultParent());
-        jGraphXAdapter.moveCells(ver, 270, 120, false);
+       component.setPreferredSize(new Dimension(getWidth(), 700));
     }
 
     void style(JGraphXAdapter<HeapVertex, HeapEdge> jGraphXAdapter) {
@@ -137,7 +136,10 @@ public class ObjectInfo extends JPanel {
             if(c.isVertex()) {
                 geo.setWidth(geo.getWidth()+30);
                 geo.setHeight(geo.getHeight()+15);
+            }
 
+            if(((HeapVertex)c.getValue()).isRoot()) {
+                jGraphXAdapter.setCellStyle("fillColor=green", new Object[]{c});
             }
         }
 

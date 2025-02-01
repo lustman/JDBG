@@ -3,6 +3,7 @@
 #include "handlergetreferences.h"
 #include <optional>
 #include "json.hpp"
+#include <boost/unordered/unordered_flat_map.hpp>
 
 
 using json = nlohmann::basic_json<>;
@@ -18,9 +19,10 @@ HandlerGetReferences::HandlerGetReferences(jvmtiEnv* jvmti, JNIEnv* jni, JdbgPip
 struct GraphInfo {
 	std::vector<int> adj;
 	std::vector<char> relationshipType;
-	std::string className;
+	std::string origin;
+	bool isRoot;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(GraphInfo, adj, relationshipType, className)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(GraphInfo, adj, relationshipType, origin, isRoot)
 
 };
 
@@ -32,23 +34,21 @@ bool dfs(int node, boolean isFirst, std::string& originalClass,
 	std::set<int>& visited, 
 	std::map<int, std::string>& classTagMap) {
 
-	if (visited.find(node) != visited.end())
-		return true;
+	if (node == 0) {
+		return false;
+	}
+
+	if (visited.find(node) != visited.end()) {
+		return subGraph.find(node) != subGraph.end();
+	}
 	visited.insert(node);
 
 
 	int classTag = (*heapGraph)[node].klassTag;
 
-	std::string blacklist[]{
-		"java",
-		"jdk",
-		"sun",
-	};
 
-	std::string whitelistOverride[]{
-		"java/lang",
-		"java/util"
-	};
+
+
 
 	std::string className;
 	if (classTagMap.find(classTag) != classTagMap.end()) {
@@ -58,6 +58,17 @@ bool dfs(int node, boolean isFirst, std::string& originalClass,
 		className = "??";
 	}
 
+	
+	std::string blacklist[]{
+	"java",
+	"jdk",
+	"sun",
+	};
+
+	std::string whitelistOverride[]{
+		"java/lang",
+		"java/util"
+	};
 	for (std::string& ignorePath : blacklist) {
 		if (className.find(ignorePath) != std::string::npos) {
 
@@ -73,26 +84,16 @@ bool dfs(int node, boolean isFirst, std::string& originalClass,
 	}
 
 	skip: {}
+	
 
-	subGraph[node].className = std::move(className);
-
-	if (subGraph[node].className == "Ljava/lang/Class;") {
-		MessageBoxA(nullptr, std::to_string(node).c_str(), "AAAHHH", MB_ICONERROR);
-		MessageBoxA(nullptr, std::to_string((*heapGraph)[node].klassTag).c_str(), "AAAHHH", MB_ICONERROR);
+	subGraph[node].origin = std::move(className);
 
 
-	}
-
-	if (!isFirst && (subGraph[node].className.find("java/lang") == std::string::npos
-		&& subGraph[node].className.find("java/util") == std::string::npos
-		&& subGraph[node].className.find(originalClass) == std::string::npos
-		)) {
-		MessageBoxA(nullptr, subGraph[node].className.c_str(), "Insider", MB_ICONERROR);
-
+	// is static
+	if (node == classTag) {
+		subGraph[node].origin += " (Class)";
 		return true;
 	}
-
-	MessageBoxA(nullptr, subGraph[node].className.c_str(), "Insider", MB_ICONERROR);
 
 
 	for (int i = 0; i < (*heapGraph)[node].referrers.size(); i++) {
@@ -101,6 +102,7 @@ bool dfs(int node, boolean isFirst, std::string& originalClass,
 			subGraph[node].relationshipType.push_back((*heapGraph)[node].referrersType[i]);
 		}
 	}
+	subGraph[node].origin += " (Object)";
 
 	return true;
 }
@@ -130,6 +132,8 @@ int HandlerGetReferences::handle(char* data, DWORD length, char* responseBuffer,
 		return 0;
 	}
 
+	msgLog("Object tag of object: " + std::to_string(objTag));
+
 
 
 	std::map<int, GraphInfo> subGraph;
@@ -146,6 +150,8 @@ int HandlerGetReferences::handle(char* data, DWORD length, char* responseBuffer,
 
 
 	dfs(objTag, true, klassName, heapGraph, subGraph, visited, classTagMap);
+	msgLog("Set root");
+	subGraph[objTag].isRoot = true;
 
 	
 	std::map<std::string, GraphInfo> newGraph;
