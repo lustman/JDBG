@@ -52,7 +52,8 @@ public class MainHeapPanel extends JPanel {
 
         FieldResponseData fields = CoreInterface.getInstance().getFields(tagItem);
         if(fields==null) {
-            return;
+            fields = new FieldResponseData();
+            //return;
         }
         objectInfo = new ObjectInfo(tagItem,  fields, refs);
         objectInfoScrollPane.setViewportView(objectInfo);
