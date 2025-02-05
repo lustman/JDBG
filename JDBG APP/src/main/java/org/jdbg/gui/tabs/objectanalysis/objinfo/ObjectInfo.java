@@ -9,6 +9,7 @@ import com.mxgraph.model.mxGeometry;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxStylesheet;
+import org.jdbg.core.CoreInterface;
 import org.jdbg.core.Util;
 import org.jdbg.core.pipeline.response.FieldData;
 import org.jdbg.core.pipeline.response.FieldResponseData;
@@ -24,6 +25,8 @@ import org.jgrapht.graph.DefaultEdge;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Map;
 
 public class ObjectInfo extends JPanel {
@@ -35,7 +38,29 @@ public class ObjectInfo extends JPanel {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(new ObjInfoBorder(tagItem.toString()));
-        panel.add(new ObjectStringInfo("Object Value: " + (fields.value == null ? "N/A" : "\"" + fields.value + "\"")));
+
+        if(fields.value==null) {
+            panel.add(new ObjectStringInfo("Object Value: N/A"));
+        } else {
+            ObjectInfoInput input = new ObjectInfoInput("Object Value",  fields.value, "Set Value");
+
+            input.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    CoreInterface.getInstance().setObjectValue(tagItem, input.getText());
+                }
+            });
+
+            panel.add(input);
+        }
+
+
+
+
+
+
+
+
         panel.add(new ObjectStringInfo("Object Tag: " + tagItem.getTag()));
 
         panel.setMaximumSize(new Dimension(10000, 500));

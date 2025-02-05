@@ -20,10 +20,9 @@ public class ObjectListPanel extends JPanel {
     public ObjectListPanel(ObjectAnalysisClassTree tree) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(UIManager.getColor("TextArea.background"));
-        Border verticalBorder =  new JTextField().getBorder(); // Top, Left, Bottom, Right
+        Border verticalBorder =  new JTextField().getBorder();
         setFont(new Font(getFont().getName(), getFont().getStyle(), getFont().getSize()+2));
 
-        setMinimumSize(new Dimension(300, 0));
         setBorder(verticalBorder);
 
 
@@ -32,7 +31,13 @@ public class ObjectListPanel extends JPanel {
         JScrollPane scrollPane =
                 new JScrollPane(tagsList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
+        //TODO Bruh
+        //swing sizes are genuinely wack so this will have to do
+        setMaximumSize(new Dimension(200, 100000));
+        setMinimumSize(new Dimension(200, 100000));
 
+        setPreferredSize(new Dimension(200, 0));
+        scrollPane.setMaximumSize(getMaximumSize());
         add(scrollPane);
         setupClick();
 

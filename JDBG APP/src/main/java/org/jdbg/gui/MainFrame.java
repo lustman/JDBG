@@ -1,5 +1,6 @@
 package org.jdbg.gui;
 
+import org.jdbg.Util;
 import org.jdbg.gui.buttonbar.buttons.AttachProcessButton;
 import org.jdbg.gui.menubar.TopMenuBar;
 import org.jdbg.gui.log.LogPane;
@@ -33,10 +34,16 @@ public class MainFrame extends JFrame {
     }
 
     void initUI() {
-        URL resource = getClass().getClassLoader().getResource("assets/icons/ic_fluent_folder_24_filled.png");
-        Icon icon = new ImageIcon(new ImageIcon(resource).getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH));
-        UIManager.put("Tree.closedIcon", icon);
-        UIManager.put("Tree.openIcon", icon);
+        try {
+            Icon folderIcon = Util.getIcon("assets/icons/ic_fluent_folder_24_filled.png", 15, 15);
+            Icon coffeeIcon = Util.getIcon("assets/icons/ic_fluent_drink_coffee_24_filled.png", 15, 15);
+            UIManager.put("Tree.closedIcon", folderIcon);
+            UIManager.put("Tree.openIcon", folderIcon);
+
+            UIManager.put("Tree.leafIcon", coffeeIcon);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
     void setupMenuBar() {
         setJMenuBar(new TopMenuBar());

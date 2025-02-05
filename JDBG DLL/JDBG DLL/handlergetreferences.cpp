@@ -26,13 +26,13 @@ struct GraphInfo {
 
 };
 
-
+constexpr int MAX_DEPTH = 12;
 
 bool dfs(int node, boolean isFirst, std::string& originalClass,
 	std::vector<RelationshipData>* heapGraph, 
 	std::map<int, GraphInfo>& subGraph, 
 	std::set<int>& visited, 
-	std::map<int, std::string>& classTagMap) {
+	std::map<int, std::string>& classTagMap, int depth) {
 
 	if (node == 0) {
 		return false;
@@ -95,9 +95,13 @@ bool dfs(int node, boolean isFirst, std::string& originalClass,
 		return true;
 	}
 
+	if (depth >= MAX_DEPTH) {
+		return true;	
+	}
+
 
 	for (int i = 0; i < (*heapGraph)[node].referrers.size(); i++) {
-		if (dfs((*heapGraph)[node].referrers[i], false, originalClass, heapGraph, subGraph, visited, classTagMap)) {
+		if (dfs((*heapGraph)[node].referrers[i], false, originalClass, heapGraph, subGraph, visited, classTagMap, depth++)) {
 			subGraph[node].adj.push_back((*heapGraph)[node].referrers[i]);
 			subGraph[node].relationshipType.push_back((*heapGraph)[node].referrersType[i]);
 		}
@@ -149,7 +153,7 @@ int HandlerGetReferences::handle(char* data, DWORD length, char* responseBuffer,
 	std::string klassName = classTagMap[(*heapGraph)[objTag].klassTag];
 
 
-	dfs(objTag, true, klassName, heapGraph, subGraph, visited, classTagMap);
+	dfs(objTag, true, klassName, heapGraph, subGraph, visited, classTagMap, 0);
 	msgLog("Set root");
 	subGraph[objTag].isRoot = true;
 

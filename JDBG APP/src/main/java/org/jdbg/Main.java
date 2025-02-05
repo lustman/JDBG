@@ -19,7 +19,6 @@ public class Main {
 
 
         try {
-
             UIManager.setLookAndFeel(new FlatDarkLaf());
 
             List<String> colors = new ArrayList<String>();

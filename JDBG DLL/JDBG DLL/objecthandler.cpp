@@ -257,7 +257,7 @@ void ObjectHandler::buildHeapGraph() {
 
 
 
-std::optional<std::pair<jclass, jobject>> ObjectHandler::getObject(long tag, char* klass, std::map<std::string, jclass>& klassMap) {
+std::optional<std::pair<jclass, jobject>> ObjectHandler::getObject(long tag, const char* klass, std::map<std::string, jclass>& klassMap) {
 
 	if (klassMap.find(klass) == klassMap.end()) {
 		msgLog("Klass not found");

@@ -72,6 +72,9 @@
     <ClCompile Include="handlerobjectfields.cpp">
       <Filter>Source Files\pipeline\impl\jdbg\handler</Filter>
     </ClCompile>
+    <ClCompile Include="handlersetobject.cpp">
+      <Filter>Source Files\pipeline\impl\jdbg\handler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pipeline.h">
@@ -109,6 +112,9 @@
     </ClInclude>
     <ClInclude Include="json.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="handlersetobject.h">
+      <Filter>Header Files\pipeline\impl\jdbg\handler</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

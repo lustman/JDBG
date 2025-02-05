@@ -9,7 +9,9 @@ enum ServerCommand {
 	GET_CLASS_DATA=1,
 	GET_OBJECT_TAGS=2,
 	GET_REFS=3,
-	GET_FIELDS=4
+	GET_FIELDS=4,
+	SET_OBJECT=5,
+	SET_FIELD=6
 };
 
 

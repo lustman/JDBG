@@ -18,7 +18,11 @@ public class PipelineMain extends Pipeline {
         GET_CLASS_DATA,
         GET_OBJECT_TAGS,
         GET_REFS,
-        GET_FIELDS
+        GET_FIELDS,
+
+        SET_OBJECT,
+
+        SET_FIELD
     }
 
     public enum ResponseStatus {

@@ -42,6 +42,7 @@ public class MainHeapPanel extends JPanel {
         objectInfo = new JPanel();
         objectInfoScrollPane = new JScrollPane(objectInfo, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         add(objectInfoScrollPane, g);
+
     }
 
     public void initObjectInfo(TagItem tagItem) {

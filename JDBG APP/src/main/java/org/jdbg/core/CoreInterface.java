@@ -2,9 +2,11 @@ package org.jdbg.core;
 
 
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.jdbg.core.attach.AttachManager;
 import org.jdbg.core.pipeline.impl.main.PipelineMain;
 import org.jdbg.core.pipeline.response.FieldResponseData;
@@ -121,6 +123,34 @@ public class CoreInterface {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    static class ObjectValueRequest {
+        public int tag;
+        public String klass;
+        public Object value;
+    }
+
+    public void setObjectValue(TagItem item, String value) {
+        ObjectValueRequest req = new ObjectValueRequest();
+        req.tag = item.getTag();
+        req.value = value;
+        req.klass = item.getKlass();
+
+
+        ObjectWriter writer = new ObjectMapper().writer();
+
+        try {
+            String msg = writer.writeValueAsString(req);
+            msg += '\0';
+            System.out.println("Msg: " + msg);
+            PipelineMain.ClientResponse response = PipelineMain.getInstance().sendAndAwait(PipelineMain.ServerCommand.SET_OBJECT,
+                    msg.getBytes(StandardCharsets.UTF_8));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
     }
 
 

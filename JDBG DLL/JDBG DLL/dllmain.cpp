@@ -65,6 +65,7 @@ DWORD WINAPI start(LPVOID lpParam) {
      capabilities.can_generate_all_class_hook_events = 1;
      capabilities.can_get_bytecodes = 1;
      capabilities.can_get_synthetic_attribute = 1;
+     capabilities.can_suspend = 1;
 
 
      jvmtiError error = jvmti->AddCapabilities(&capabilities);
@@ -91,7 +92,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 {
 
     if (ul_reason_for_call == DLL_PROCESS_ATTACH) {
-        QueueUserWorkItem(start, NULL, NULL);
+        CreateThread(NULL, 0, start, NULL, 0, NULL);
     }
 
 

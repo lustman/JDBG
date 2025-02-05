@@ -48,7 +48,7 @@ protected:
 
 	void buildHeapGraph();
 
-	std::optional<std::pair<jclass, jobject>> getObject(long tag, char* klass, std::map<std::string, jclass>& klassMap);
+	std::optional<std::pair<jclass, jobject>> getObject(long tag, const char* klass, std::map<std::string, jclass>& klassMap);
 
 
 };

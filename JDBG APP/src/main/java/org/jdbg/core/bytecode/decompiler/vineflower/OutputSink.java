@@ -7,6 +7,7 @@ import java.io.IOException;
 public class OutputSink implements IContextSource.IOutputSink {
 
     String name;
+    int[] mapping;
     protected final ThreadLocal<String> out = new ThreadLocal<>();
 
     protected OutputSink(String name) {
@@ -14,6 +15,10 @@ public class OutputSink implements IContextSource.IOutputSink {
     }
     protected ThreadLocal<String> getDecompiledOutput() {
         return out;
+    }
+
+    public int[] getMapping() {
+        return mapping;
     }
 
     @Override
@@ -25,6 +30,7 @@ public class OutputSink implements IContextSource.IOutputSink {
     public void acceptClass(String qualifiedName, String fileName, String content, int[] mapping) {
         if (name.equals(qualifiedName))
             out.set(content);
+        this.mapping = mapping;
     }
 
     @Override

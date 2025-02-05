@@ -23,7 +23,7 @@ public class CodePanel extends JPanel {
         text.setText(s);
     }
 
-
-
-
+    public CodeText getText() {
+        return text;
+    }
 }

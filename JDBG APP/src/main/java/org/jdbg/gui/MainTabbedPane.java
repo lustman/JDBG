@@ -8,7 +8,6 @@ import org.jdbg.gui.tabs.objectanalysis.TabObjects;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
-import java.util.List;
 
 public class MainTabbedPane extends JTabbedPane {
 
@@ -51,8 +50,8 @@ public class MainTabbedPane extends JTabbedPane {
         return classes;
     }
 
-    public void setCode(String s) {
-        classes.setCode(s);
+    public void initClass(String dec, byte[] klass) {
+        classes.init(dec, klass);
     }
 
 

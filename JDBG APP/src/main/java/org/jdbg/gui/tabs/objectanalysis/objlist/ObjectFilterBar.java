@@ -42,9 +42,9 @@ public class ObjectFilterBar extends JPanel {
 
             }
         });
+        filterField.setMinimumSize(new Dimension(50, 23));
 
-        filterField.setPreferredSize(new Dimension(120, 23));
-        setMaximumSize(new Dimension(300, 100));
-        revalidate();
+        filterField.setPreferredSize(new Dimension(100, 23));
+        setMaximumSize(new Dimension(200, 100));
     }
 }

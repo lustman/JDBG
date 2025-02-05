@@ -10,6 +10,7 @@
 #include "handlertagobjects.h"
 #include "handlergetreferences.h"
 #include "handlerobjectfields.h"
+#include "handlersetobject.h"
 
 #include <map>
 #include <string>
@@ -73,12 +74,14 @@ void JdbgPipeline::startListen(jvmtiEnv* jvmti, JNIEnv* jni) {
 	handlers.push_back(std::make_unique<HandlerTagObjects>(HandlerTagObjects{ jvmti, jni, this }));
 	handlers.push_back(std::make_unique<HandlerGetReferences>(HandlerGetReferences{ jvmti, jni, this }));
 	handlers.push_back(std::make_unique<HandlerObjectFields>(HandlerObjectFields{ jvmti, jni, this }));
+	handlers.push_back(std::make_unique<HandlerSetObject>(HandlerSetObject{ jvmti, jni, this }));
 
 	for (std::unique_ptr<Handler>& h : handlers) {
 		h->setLogPipeline(&log);
 	}
 
-	log.addMessage("Thread id: " + std::to_string(GetThreadId(GetCurrentThread())));
+	DWORD threadID{ GetThreadId(GetCurrentThread()) };
+	log.addMessage("Thread id: " + std::to_string(threadID));
 	log.flush();
 
 	constexpr int BUFFER_SIZE = 500;
@@ -99,6 +102,30 @@ void JdbgPipeline::startListen(jvmtiEnv* jvmti, JNIEnv* jni) {
 			continue;
 		}
 
+		/*
+		jint threadCount;
+		jthread* threads;
+		jvmti->GetAllThreads(&threadCount, &threads);
+
+		jthread currentThread;
+		if (jvmti->GetCurrentThread(&currentThread) != JVMTI_ERROR_NONE) {
+			MessageBox(nullptr, L"Failed to get current thread", L"Insider", MB_ICONERROR);
+
+		}
+
+		for (int i = 0; i < threadCount; i++) {
+			jthread thread{ *(threads + i) };
+
+			if (!jni->IsSameObject(currentThread, thread)) {
+				if (jvmti->SuspendThread(thread) != JVMTI_ERROR_NONE) {
+					MessageBox(nullptr, L"Failed to suspend thread", L"Insider", MB_ICONERROR);
+
+				}
+
+			}
+		}
+		*/
+
 		ServerCommand command = static_cast<ServerCommand>(buffer[0]);
 
 		for (std::unique_ptr<Handler>& h : handlers) {
@@ -113,6 +140,22 @@ void JdbgPipeline::startListen(jvmtiEnv* jvmti, JNIEnv* jni) {
 		}
 
 		log.flush();
+
+		/*
+		for (int i = 0; i < threadCount; i++) {
+			jthread thread{ *(threads + i) };
+
+			if (!jni->IsSameObject(currentThread, thread)) {
+				if (jvmti->ResumeThread(thread) != JVMTI_ERROR_NONE) {
+					MessageBox(nullptr, L"Failed to resume thread", L"Insider", MB_ICONERROR);
+
+				}
+			}
+
+		}
+		*/
+
+
 		delete[] buffer;
 	}
 

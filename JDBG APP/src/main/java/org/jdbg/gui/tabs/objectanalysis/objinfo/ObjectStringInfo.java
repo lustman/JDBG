@@ -7,7 +7,7 @@ public class ObjectStringInfo extends JTextArea {
 
     public ObjectStringInfo(String info) {
         super(info);
-        setPreferredSize(new Dimension(200, 20));
+        setPreferredSize(new Dimension(0, 20));
         setEditable(false);
 
     }
