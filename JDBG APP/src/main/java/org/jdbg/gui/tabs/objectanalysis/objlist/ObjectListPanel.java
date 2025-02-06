@@ -61,7 +61,6 @@ public class ObjectListPanel extends JPanel {
     }
 
     void handleLeftClick(MouseEvent e, TagItem tagItem) {
-        Logger.log("Left");
         MainFrame.getInstance().getMainPane().getTabObjects().getMainHeapPanel().initObjectInfo(tagItem);
     }
     void handleRightClick(MouseEvent e, TagItem tagItem) {

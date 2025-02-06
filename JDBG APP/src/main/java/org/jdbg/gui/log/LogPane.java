@@ -10,11 +10,8 @@ import javax.swing.*;
 public class LogPane extends JTabbedPane {
 
     public LogPane(){
-
         addLog("JDBG log", new LogJDBG());
         addLog("Agent log", new LogAgent());
-        addLog("Process JVM log", new LogProcess());
-
     }
 
     private void addLog(String name, Log log) {

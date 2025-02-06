@@ -116,8 +116,6 @@ public class CoreInterface {
         }
         try {
             ObjectMapper mapper = new ObjectMapper();
-            Logger.log("response size: "+  response.response.length);
-            System.out.println(new String(response.response));
             return mapper.readValue(new String(response.response), FieldResponseData.class);
         } catch (Exception e) {
             e.printStackTrace();
@@ -181,8 +179,6 @@ public class CoreInterface {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            Logger.log("response size: "+  response.response.length);
-            System.out.println(new String(response.response));
 
             Map<String, SubGraphData> data = mapper.readValue(new String(response.response), new TypeReference<Map<String, SubGraphData>>() {});
             Map<Integer, SubGraphData> map = new HashMap<>();
@@ -214,7 +210,6 @@ public class CoreInterface {
         name += '\0';
 
         PipelineMain.ClientResponse response = PipelineMain.getInstance().sendAndAwait(PipelineMain.ServerCommand.GET_CLASS_DATA, name.getBytes(StandardCharsets.UTF_8));
-        Logger.log("Got class data size: " + response.response.length);
 
         return response.response;
     }
