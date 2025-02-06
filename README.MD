@@ -14,25 +14,27 @@
 
 - Bypass any conventional java agent restrictions such as -XX:+DisableAttachMechanism, leveraging an injected dll and native interfaces JNI and JVMTI
 - Class Analysis
- - Analyse decompiled classes at runtime
- - Analyse method bytecode and field definitions at runtime
- - Add classes to object analysis
- - Planned Features
-    - Setting breakpoints to decompiled code and bytecode
-       - Ability to add stack locals to object analysis
-    - bytecode instrumentation and class redefinitions
-   - static variable modification
+  - Analyse decompiled classes at runtime
+  - Analyse method bytecode and field definitions at runtime
+  - Add classes to object analysis
+  - Planned Features
+     - Setting breakpoints to decompiled code and bytecode
+        - Ability to add stack locals to object analysis
+     - bytecode instrumentation and class redefinitions
+    - static variable modification
 - Object Analysis
- - Add classes to object workspace
- - View all instances of a class
- - Apply filters using the Exprtk C++ library to obtain relevant objects
-    - Filters support recursive searches, e.g. obj.field1.field2 > 3 or 'hello' in obj.field1
-    - Planned support for arrays
- - Observe object values (such as strings) and fields
- - Generate graphs based on the heap relationships of objects
+  - Add classes to object workspace
+  - View all instances of a class
+  - Apply filters using the Exprtk C++ library to obtain relevant objects
+     - Filters support recursive searches, e.g. obj.field1.field2 > 3 or 'hello' in obj.field1
+     - Planned support for arrays
+  - Observe object values (such as strings) and fields
+  - Generate graphs based on the heap relationships of objects
      - Obtain pointer paths to specific objects, useful in determining classes from which they originate (especially for strings)
- - Planned features
-    
+  - Planned features
+     - Set field values
+
+
 ## How to use
 
 To use JDBG, you must have a JVM running Java 17 or higher.
