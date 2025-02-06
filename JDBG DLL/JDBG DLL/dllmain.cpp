@@ -12,12 +12,30 @@ struct EnvResult {
     JavaVM* jvm;
 };
 
+typedef jint(JNICALL* JNI_GetCreatedJavaVMs_t)(JavaVM** vm, jsize max_count, jsize* count);
+
 EnvResult getEnv() {
     JavaVM* JVM;
     jvmtiEnv* jvmTI;
     JNIEnv* env;
     jsize nVMs;
     jint res;
+
+
+    HMODULE hJvm = GetModuleHandle(L"jvm.dll");
+    if (hJvm == NULL) {
+        MessageBoxA(nullptr, "Failed to get jvm.dll handle", "Insider", MB_ICONERROR);
+        return EnvResult{ -1, nullptr,nullptr,nullptr };
+
+    }
+
+    // Get the address of the JNI_GetCreatedJavaVMs function
+    JNI_GetCreatedJavaVMs_t JNI_GetCreatedJavaVMs = (JNI_GetCreatedJavaVMs_t)GetProcAddress(hJvm, "JNI_GetCreatedJavaVMs");
+    if (JNI_GetCreatedJavaVMs == NULL) {
+        MessageBoxA(nullptr, "Failed to find JNI_GetCreatedJavaVMs function in jvm.dll", "Insider", MB_ICONERROR);
+        return EnvResult{ -1, nullptr,nullptr,nullptr };
+
+    }
 
     try {
         res = JNI_GetCreatedJavaVMs(&JVM, 1, &nVMs);
@@ -53,6 +71,10 @@ DWORD WINAPI start(LPVOID lpParam) {
 
      serverPipe.connectPipe();
      EnvResult env{ getEnv() };
+
+     if (env.code != 0) {
+         return 0;
+     }
 
      jvmtiEnv* jvmti = env.jvmti;
 

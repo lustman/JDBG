@@ -95,13 +95,45 @@ public class AttachManager {
 
         return false;
     }
+
+
+    Function get32BitLoadLibrary() {
+        try {
+
+            byte[] bytes = getClass().getClassLoader().getResourceAsStream("assets/JDBG 32bit Helper.exe").readAllBytes();
+            File file = File.createTempFile("32bithelper", ".exe");
+            Files.write(file.getAbsoluteFile().toPath(), bytes);
+            Process process = Runtime.getRuntime().exec(file.getAbsolutePath());
+
+
+            int nativePtr = process.waitFor();
+            Pointer p = new Pointer(nativePtr);
+
+            return Function.getFunction(p);
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
     private boolean injectDLL(String dllPath, int pid) {
         dllPath += '\0';
         System.out.println(dllPath);
+        Logger.log("Last error: " +  Kernel32.INSTANCE.GetLastError());
+
         HANDLE hProcess = Kernel32.INSTANCE.OpenProcess(WinNT.PROCESS_ALL_ACCESS, false, pid);
+        System.out.println(hProcess.toString());
+
+        Logger.log("Last error: " + Kernel32.INSTANCE.GetLastError());
+
+
         Pointer pDllPath = Kernel32.INSTANCE.VirtualAllocEx(hProcess, null,
                 new BaseTSD.SIZE_T(dllPath.length()),
                 MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+
 
         ByteBuffer bufSrc = ByteBuffer.allocateDirect(dllPath.length());
         bufSrc.put(dllPath.getBytes());
@@ -116,14 +148,16 @@ public class AttachManager {
             return false;
         }
 
-        NativeLibrary kernel32Library = NativeLibrary.getInstance("kernel32");
-        Function LoadLibraryAFunction = kernel32Library.getFunction("LoadLibraryA");
+        //NativeLibrary kernel32Library = NativeLibrary.getInstance("kernel32");
+        //Function LoadLibraryAFunction = kernel32Library.getFunction("LoadLibraryA");
+        Function LoadLibraryAFunction = get32BitLoadLibrary();
 
         DWORDByReference threadId = new DWORDByReference();
+
         HANDLE hThread = Kernel32.INSTANCE.CreateRemoteThread(hProcess, null, 0,
                 LoadLibraryAFunction, pDllPath, 0, threadId);
 
-        //Logger.log("hThread: " + (hThread == INVALID_HANDLE_VALUE));
+
         return true;
 
     }

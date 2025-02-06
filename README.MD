@@ -39,16 +39,20 @@
 
 To use JDBG, you must have a JVM running Java 17 or higher.
 
-# Releases
+### Releases
 
 You can download and run it in the releases tab of this project.
 
-# Building it yourself
+### Building it yourself
 
 The java client is built in Intellij while the dll is built in Visual Studio
 
 To build the dll, you must add the /includes of your jdk to the include path (For things like jni.h and jvmti.h)
 You must also have the boost library for C++ installed.
+
+You must add the dll to the /assets folder of the client
+Furthermore, you must build the JDBG 32bit Helper executable and add it to the assets folder of the client.
+- The reason for this is that we are unable to get the proper base address of kernel32.dll and LoadLibrary for 32 bit applicatons from 64bit in usermode.
 
 
 
