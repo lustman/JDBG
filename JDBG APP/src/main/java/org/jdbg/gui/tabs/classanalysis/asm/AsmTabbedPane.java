@@ -1,6 +1,8 @@
 package org.jdbg.gui.tabs.classanalysis.asm;
 
 import org.jdbg.Util;
+import org.jdbg.core.bytecode.asm.BytecodeMethod;
+import org.jdbg.core.bytecode.asm.Bytecoder;
 import org.jdbg.gui.tabs.classanalysis.codepanel.CodePanel;
 import org.jdbg.gui.tabs.classanalysis.tabbed.ThinTabbedPane;
 import org.objectweb.asm.*;
@@ -34,40 +36,14 @@ public class AsmTabbedPane extends ThinTabbedPane {
         Icon fieldIcon = Util.getIcon("assets/icons/hexagon-letter-f.png", 15, 15);
         Icon methodIcon = Util.getIcon("assets/icons/hexagon-letter-m.png", 15, 15);
 
-        ClassNode node = new ClassNode();
-        ClassReader reader = new ClassReader(bytes);
 
+        Bytecoder b = new Bytecoder(bytes);
 
-        reader.accept(node, ClassReader.SKIP_FRAMES);
-
-
-        for(FieldNode field : node.fields) {
-            addTab(field.name, fieldIcon, new JPanel());
-        }
-
-        for(MethodNode method : node.methods) {
-            Textifier textifier = new Textifier();
-            TraceMethodVisitor traceMethodVisitor = new TraceMethodVisitor(textifier);
-
-            for(AbstractInsnNode insn : method.instructions) {
-                method.visitCode();
-                insn.accept(traceMethodVisitor);
-            }
-
-            List<?> textLines = textifier.getText();
-            StringBuilder text = new StringBuilder();
-            for(Object line : textLines) {
-                text.append(line.toString());
-            }
-
+        for(BytecodeMethod method : b.getMethods()) {
             CodePanel c = new CodePanel();
-            c.setText(text.toString());
-
-
+            c.setText(method.getText());
             addTab(method.name, methodIcon, c);
-
         }
-
 
     }
 }
