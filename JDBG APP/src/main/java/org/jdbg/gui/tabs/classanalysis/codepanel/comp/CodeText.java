@@ -20,8 +20,14 @@ public class CodeText extends RSyntaxTextArea {
             e.printStackTrace();
         }
     }
+
+
     public CodeText() {
         setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+
+
+
+
         setCodeFoldingEnabled(true);
         setEditable(false);
         setFont(codeFont);

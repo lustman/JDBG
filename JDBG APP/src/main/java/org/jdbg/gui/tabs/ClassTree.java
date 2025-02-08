@@ -2,9 +2,14 @@ package org.jdbg.gui.tabs;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTreeUI;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ClassTree extends JTree {
 
@@ -36,6 +41,32 @@ public abstract class ClassTree extends JTree {
                 }
             }
         });
+    }
+
+    void getExpandedTreePaths(JTree tree, TreePath current, List<TreePath> list) {
+        TreeModel model = tree.getModel();
+        Object node =  current.getLastPathComponent();
+        int childCount = model.getChildCount(node);
+
+        if(tree.isExpanded(current)) {
+            list.add(current);
+        }
+
+        for (int i = 0; i < childCount; i++) {
+            Object child = model.getChild(node, i);
+            getExpandedTreePaths(tree, current.pathByAddingChild(child), list);
+        }
+    }
+
+
+    public void reload() {
+        List<TreePath> paths = new ArrayList<>();
+        getExpandedTreePaths(this, new TreePath(getModel().getRoot()), paths);
+        ((DefaultTreeModel)getModel()).reload();
+
+        for(TreePath path: paths) {
+            expandPath(path);
+        }
 
     }
 

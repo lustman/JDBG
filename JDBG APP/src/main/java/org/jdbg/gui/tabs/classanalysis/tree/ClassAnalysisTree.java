@@ -1,4 +1,4 @@
-package org.jdbg.gui.tabs.classanalysis;
+package org.jdbg.gui.tabs.classanalysis.tree;
 
 import org.jdbg.core.CoreInterface;
 import org.jdbg.core.bytecode.decompiler.vineflower.VineflowerDecompiler;
@@ -8,14 +8,33 @@ import org.jdbg.gui.tabs.ClassTreeNode;
 import org.jdbg.logger.Logger;
 
 import javax.swing.*;
+import javax.swing.tree.TreeNode;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class ClassAnalysisTree extends ClassTree {
 
 
+    List<ClassTreeNode> leaves = new ArrayList<>();
+
+
+    void explore(ClassTreeNode node) {
+        if(node.isLeaf()) {
+            leaves.add(node);
+            return;
+        }
+
+        Iterator<? extends TreeNode> it = node.children().asIterator();
+        while(it.hasNext()) {
+            explore((ClassTreeNode) it.next());
+        }
+    }
     public ClassAnalysisTree(ClassTreeNode node) {
         super(node);
+        explore(node);
     }
 
     @Override
@@ -45,6 +64,7 @@ public class ClassAnalysisTree extends ClassTree {
     }
 
 
-
-
+    public List<ClassTreeNode> getLeaves() {
+        return leaves;
+    }
 }

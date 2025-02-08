@@ -11,6 +11,7 @@ import org.jdbg.core.pipeline.impl.main.PipelineMain;
 import org.jdbg.gui.MainFrame;
 import org.jdbg.logger.Logger;
 
+import java.awt.image.Kernel;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
@@ -54,14 +55,26 @@ public class AttachManager {
         PipelineMain.getInstance().createPipe();
 
         try {
-            byte[] bytes = getClass().getClassLoader().getResourceAsStream("assets/JDBG DLL.dll").readAllBytes();
+
+            HANDLE hProcess = Kernel32.INSTANCE.OpenProcess(WinNT.PROCESS_ALL_ACCESS, false, pid);
+            IntByReference is64 = new IntByReference();
+            Kernel32.INSTANCE.IsWow64Process(hProcess, is64);
+            boolean is64Bit = is64.getValue()==0;
+
+            byte[] bytes;
+            if(is64Bit) {
+                bytes = getClass().getClassLoader().getResourceAsStream("assets/JDBG DLL_64.dll").readAllBytes();
+            } else {
+                bytes = getClass().getClassLoader().getResourceAsStream("assets/JDBG DLL_32.dll").readAllBytes();
+
+            }
             System.out.println(bytes.length);
 
             File file = File.createTempFile("jrev", ".dll");
             Files.write(file.getAbsoluteFile().toPath(), bytes);
 
 
-            if(injectDLL(file.getAbsolutePath(), pid)) {
+            if(injectDLL(file.getAbsolutePath(), hProcess, is64Bit)) {
                 Logger.log("DLL injected");
             }
         } catch (Exception e) {
@@ -119,16 +132,9 @@ public class AttachManager {
         return null;
 
     }
-    private boolean injectDLL(String dllPath, int pid) {
+    private boolean injectDLL(String dllPath, HANDLE hProcess, boolean is64bit) {
         dllPath += '\0';
         System.out.println(dllPath);
-        Logger.log("Last error: " +  Kernel32.INSTANCE.GetLastError());
-
-        HANDLE hProcess = Kernel32.INSTANCE.OpenProcess(WinNT.PROCESS_ALL_ACCESS, false, pid);
-        System.out.println(hProcess.toString());
-
-        Logger.log("Last error: " + Kernel32.INSTANCE.GetLastError());
-
 
         Pointer pDllPath = Kernel32.INSTANCE.VirtualAllocEx(hProcess, null,
                 new BaseTSD.SIZE_T(dllPath.length()),
@@ -148,9 +154,16 @@ public class AttachManager {
             return false;
         }
 
-        //NativeLibrary kernel32Library = NativeLibrary.getInstance("kernel32");
-        //Function LoadLibraryAFunction = kernel32Library.getFunction("LoadLibraryA");
-        Function LoadLibraryAFunction = get32BitLoadLibrary();
+        Function LoadLibraryAFunction;
+
+        if(is64bit) {
+            NativeLibrary kernel32Library = NativeLibrary.getInstance("kernel32");
+            LoadLibraryAFunction = kernel32Library.getFunction("LoadLibraryA");
+            Logger.log("JVM Process is 64bit.");
+        } else {
+            Logger.log("JVM Process is 32bit. Running 32bit helper.");
+            LoadLibraryAFunction = get32BitLoadLibrary();
+        }
 
         DWORDByReference threadId = new DWORDByReference();
 

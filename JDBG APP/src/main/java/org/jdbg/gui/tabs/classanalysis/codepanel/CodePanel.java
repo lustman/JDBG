@@ -19,6 +19,15 @@ public class CodePanel extends JPanel {
         add(pane);
     }
 
+
+    public void setSyntax(String s) {
+        text.setSyntaxEditingStyle(s);
+    }
+
+
+
+
+
     public void setText(String s) {
         text.setText(s);
     }

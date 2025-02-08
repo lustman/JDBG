@@ -1,10 +1,12 @@
 package org.jdbg;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
+import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
 import org.jdbg.core.pipeline.impl.logdll.PipelineLogDll;
 import org.jdbg.gui.MainFrame;
 import org.jdbg.core.pipeline.impl.main.PipelineMain;
-import org.jdbg.logger.Logger;
+import org.jdbg.gui.tabs.classanalysis.codepanel.token.JavaBytecodeTokenMaker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +19,8 @@ public class Main {
     public static void main(String[] args) {
         WrapperMain.wrap();
 
+        AbstractTokenMakerFactory atmf = (AbstractTokenMakerFactory) TokenMakerFactory.getDefaultInstance();
+        atmf.putMapping("java-bytecode", JavaBytecodeTokenMaker.class.getName());
 
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());

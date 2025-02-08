@@ -27,7 +27,7 @@ public class ClassTreeNode implements TreeNode, Comparable<ClassTreeNode> {
 
         ClassTreeNode klass = new ClassTreeNode(current, true, tokens[tokens.length-1]);
         klass.setFullDir(s);
-        current.children.add(klass);
+        current.add(klass);
     }
 
 
@@ -35,10 +35,13 @@ public class ClassTreeNode implements TreeNode, Comparable<ClassTreeNode> {
     private String fullDir;
     private final String name;
     SortedSet<ClassTreeNode> children = new TreeSet<>();
+    SortedSet<ClassTreeNode> visibleChildren = new TreeSet<>();
 
     private final boolean isClass;
 
     ClassTreeNode parent;
+
+    private boolean isVisible = true;
 
 
 
@@ -65,6 +68,30 @@ public class ClassTreeNode implements TreeNode, Comparable<ClassTreeNode> {
         return isClass;
     }
 
+
+    public void removeFromVisible(ClassTreeNode child) {
+        child.isVisible = false;
+        visibleChildren.remove(child);
+        if(visibleChildren.size()==0) {
+            // is root
+            if(parent==null) {
+                return;
+            }
+            parent.removeFromVisible(this);
+        }
+    }
+
+    public void add(ClassTreeNode child) {
+        child.isVisible = true;
+        visibleChildren.add(child);
+        children.add(child);
+
+        if(!isVisible) {
+            isVisible = true;
+            parent.add(this);
+        }
+    }
+
     private ClassTreeNode get(String thing) {
         Iterator<ClassTreeNode> it = children.iterator();
         for(int i = 0; i < children.size(); i++) {
@@ -76,6 +103,7 @@ public class ClassTreeNode implements TreeNode, Comparable<ClassTreeNode> {
 
         ClassTreeNode node = new ClassTreeNode(this, false, thing);
         children.add(node);
+        visibleChildren.add(node);
         return node;
     }
 
@@ -84,9 +112,10 @@ public class ClassTreeNode implements TreeNode, Comparable<ClassTreeNode> {
         return name.compareTo(o.name);
     }
 
-
     public TreeNode getChildAt(int childIndex) {
-        Iterator<ClassTreeNode> it = children.iterator();
+        Iterator<ClassTreeNode> it = visibleChildren.iterator();
+
+
         for(int i = 0; i < childIndex; i++) {
             it.next();
         }
@@ -95,12 +124,14 @@ public class ClassTreeNode implements TreeNode, Comparable<ClassTreeNode> {
     }
 
     public int getChildCount() {
-        return children.size();
+        return visibleChildren.size();
     }
 
     public TreeNode getParent() {
         return parent;
     }
+
+
 
     /**
      * Returns the index of <code>node</code> in the receivers children.
@@ -111,8 +142,8 @@ public class ClassTreeNode implements TreeNode, Comparable<ClassTreeNode> {
      * @return              index of specified node
      */
     public int getIndex(TreeNode node) {
-        Iterator<ClassTreeNode> it = children.iterator();
-        for(int i = 0; i < children.size(); i++) {
+        Iterator<ClassTreeNode> it = visibleChildren.iterator();
+        for(int i = 0; i < visibleChildren.size(); i++) {
             if(it.next().equals(node)) {
                 return i;
             }
@@ -131,7 +162,7 @@ public class ClassTreeNode implements TreeNode, Comparable<ClassTreeNode> {
     }
 
     public Enumeration<? extends TreeNode> children() {
-        return Collections.enumeration(children);
+        return Collections.enumeration(visibleChildren);
     }
 
 
@@ -145,6 +176,13 @@ public class ClassTreeNode implements TreeNode, Comparable<ClassTreeNode> {
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+
+
+
+    public boolean isVisible() {
+        return isVisible;
     }
 
     @Override

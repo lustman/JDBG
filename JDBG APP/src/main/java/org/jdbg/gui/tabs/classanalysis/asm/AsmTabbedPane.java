@@ -41,6 +41,7 @@ public class AsmTabbedPane extends ThinTabbedPane {
 
         for(BytecodeMethod method : b.getMethods()) {
             CodePanel c = new CodePanel();
+            c.setSyntax("java-bytecode");
             c.setText(method.getText());
             addTab(method.name, methodIcon, c);
         }
