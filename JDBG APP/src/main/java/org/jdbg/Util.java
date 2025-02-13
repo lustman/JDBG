@@ -2,6 +2,7 @@ package org.jdbg;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 
 public class Util {
@@ -18,4 +19,47 @@ public class Util {
         return null;
 
     }
+
+
+    public static String buildModifiers(int modifiers) {
+        StringBuilder sb = new StringBuilder();
+
+        if (Modifier.isPublic(modifiers)) {
+            sb.append("public ");
+        }
+        if (Modifier.isProtected(modifiers)) {
+            sb.append("protected ");
+        }
+        if (Modifier.isPrivate(modifiers)) {
+            sb.append("private ");
+        }
+        if (Modifier.isAbstract(modifiers)) {
+            sb.append("abstract ");
+        }
+        if (Modifier.isStatic(modifiers)) {
+            sb.append("static ");
+        }
+        if (Modifier.isFinal(modifiers)) {
+            sb.append("final ");
+        }
+        if (Modifier.isTransient(modifiers)) {
+            sb.append("transient ");
+        }
+        if (Modifier.isVolatile(modifiers)) {
+            sb.append("volatile ");
+        }
+        if (Modifier.isSynchronized(modifiers)) {
+            sb.append("synchronized ");
+        }
+        if (Modifier.isNative(modifiers)) {
+            sb.append("native ");
+        }
+        if (Modifier.isStrict(modifiers)) {
+            sb.append("strictfp ");
+        }
+
+        // Remove the trailing space if present and return the string.
+        return sb.toString().trim();
+    }
+
 }

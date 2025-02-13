@@ -20,12 +20,8 @@ public class Bytecoder {
 
         for(MethodNode m : node.methods) {
             OffsetMethodNode method = (OffsetMethodNode) m;
-            BytecodeMethod theMethod = new BytecodeMethod();
-            theMethod.instructions = method.instructions;
-            theMethod.offsets = method.getOffsets();
-            theMethod.textFormat = buildText(m.instructions);
-            theMethod.name = method.name;
-            theMethod.signature = method.signature;
+            BytecodeMethod theMethod = new BytecodeMethod(method.instructions, buildText(m.instructions), method.getOffsets(), method.name, method.desc, method.access);
+
 
             System.out.println(theMethod.instructions.size() + " - " + theMethod.offsets.size() + " - " + theMethod.textFormat.size());
             if(theMethod.instructions.size() != theMethod.textFormat.size()) {

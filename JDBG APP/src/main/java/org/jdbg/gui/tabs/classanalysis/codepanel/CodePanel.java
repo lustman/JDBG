@@ -27,8 +27,6 @@ public class CodePanel extends JPanel {
 
 
 
-
-
     public void setText(String s) {
         text.setText(s);
     }

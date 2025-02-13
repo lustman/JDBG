@@ -4,6 +4,7 @@ import org.fife.ui.rtextarea.IconRowEvent;
 import org.fife.ui.rtextarea.IconRowHeader;
 import org.fife.ui.rtextarea.IconRowListener;
 import org.jdbg.Util;
+import org.jdbg.core.attach.AttachManager;
 import org.jdbg.logger.Logger;
 
 import javax.swing.*;
@@ -23,18 +24,7 @@ public class AsmCodePanel extends CodePanel {
         scrollPane.getGutter().setIconRowHeaderInheritsGutterBackground(true);
         scrollPane.getGutter().setBookmarkingEnabled(true);
         scrollPane.getGutter().setBookmarkIcon(createBreakpointIcon());
-        scrollPane.getGutter().addIconRowListener(new IconRowListener() {
-            @Override
-            public void bookmarkAdded(IconRowEvent iconRowEvent) {
-                Logger.log("Added");
-            }
-
-            @Override
-            public void bookmarkRemoved(IconRowEvent iconRowEvent) {
-                Logger.log("removed");
-
-            }
-        });
+        scrollPane.getGutter().addIconRowListener(AttachManager.getInstance().getBreakpointManager());
 
         Icon folderIcon = Util.getIcon("assets/icons/ic_fluent_folder_24_filled.png", 15, 15);
 

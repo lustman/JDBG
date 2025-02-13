@@ -1,11 +1,14 @@
 package org.jdbg.gui.tabs.classanalysis.asm;
 
 import org.jdbg.Util;
+import org.jdbg.core.attach.AttachManager;
+import org.jdbg.core.attach.breakpoint.BreakpointManager;
 import org.jdbg.core.bytecode.asm.BytecodeMethod;
 import org.jdbg.core.bytecode.asm.Bytecoder;
 import org.jdbg.gui.tabs.classanalysis.codepanel.AsmCodePanel;
 import org.jdbg.gui.tabs.classanalysis.codepanel.CodePanel;
 import org.jdbg.gui.tabs.classanalysis.tabbed.ThinTabbedPane;
+import org.jdbg.logger.Logger;
 import org.objectweb.asm.*;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -15,14 +18,20 @@ import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceMethodVisitor;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AsmTabbedPane extends ThinTabbedPane {
 
 
+    Map<Component, BytecodeMethod> methodMap = new HashMap<>();
     public AsmTabbedPane() {
         setBackground(UIManager.getColor("TabbedPane.buttonHoverBackground"));
     }
@@ -35,12 +44,44 @@ public class AsmTabbedPane extends ThinTabbedPane {
 
         Bytecoder b = new Bytecoder(bytes);
 
+
         for(BytecodeMethod method : b.getMethods()) {
             CodePanel c = new AsmCodePanel();
             c.setSyntax("java-bytecode");
             c.setText(method.getText());
-            addTab(method.name, methodIcon, c);
+            addTab(method.getName(), methodIcon, c);
+            methodMap.put(c, method);
         }
 
+        ChangeListener listener = new ChangeListener() {
+
+
+            Component previousComponent;
+
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                if (e.getSource() instanceof JTabbedPane) {
+                    if (getSelectedComponent() == null || getSelectedComponent() == previousComponent) {
+                        return;
+                    }
+                    onChange(getSelectedComponent());
+                }
+            }
+        };
+
+        addChangeListener(listener);
+        listener.stateChanged(new ChangeEvent(this));
     }
+
+
+    void onChange(Component c) {
+        BytecodeMethod method = methodMap.get(c);
+        if(method==null) {
+            return;
+        }
+
+        AttachManager.getInstance().getBreakpointManager().setActiveMethod(method);
+    }
+
+
 }
