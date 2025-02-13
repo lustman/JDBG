@@ -165,6 +165,10 @@ public class ClassTreeNode implements TreeNode, Comparable<ClassTreeNode> {
         return Collections.enumeration(visibleChildren);
     }
 
+    public Enumeration<? extends TreeNode> allChildren() {
+        return Collections.enumeration(children);
+    }
+
 
     @Override
     public boolean equals(Object obj) {

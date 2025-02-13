@@ -10,13 +10,14 @@ import java.awt.*;
 public class CodePanel extends JPanel {
 
     CodeText text;
+    protected RTextScrollPane scrollPane;
     public CodePanel() {
         setLayout(new GridLayout());
         text = new CodeText();
-        RTextScrollPane pane = new RTextScrollPane(text);
-        pane.getGutter().setBorderColor(UIManager.getColor("TextArea.background"));
+        scrollPane = new RTextScrollPane(text);
+        scrollPane.getGutter().setBorderColor(UIManager.getColor("TextArea.background"));
 
-        add(pane);
+        add(scrollPane);
     }
 
 

@@ -3,6 +3,7 @@ package org.jdbg.gui.tabs.classanalysis.asm;
 import org.jdbg.Util;
 import org.jdbg.core.bytecode.asm.BytecodeMethod;
 import org.jdbg.core.bytecode.asm.Bytecoder;
+import org.jdbg.gui.tabs.classanalysis.codepanel.AsmCodePanel;
 import org.jdbg.gui.tabs.classanalysis.codepanel.CodePanel;
 import org.jdbg.gui.tabs.classanalysis.tabbed.ThinTabbedPane;
 import org.objectweb.asm.*;
@@ -26,11 +27,6 @@ public class AsmTabbedPane extends ThinTabbedPane {
         setBackground(UIManager.getColor("TabbedPane.buttonHoverBackground"));
     }
 
-
-
-
-
-
     public void init(byte[] bytes) {
         removeAll();
         Icon fieldIcon = Util.getIcon("assets/icons/hexagon-letter-f.png", 15, 15);
@@ -40,7 +36,7 @@ public class AsmTabbedPane extends ThinTabbedPane {
         Bytecoder b = new Bytecoder(bytes);
 
         for(BytecodeMethod method : b.getMethods()) {
-            CodePanel c = new CodePanel();
+            CodePanel c = new AsmCodePanel();
             c.setSyntax("java-bytecode");
             c.setText(method.getText());
             addTab(method.name, methodIcon, c);

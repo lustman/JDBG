@@ -27,8 +27,8 @@ public class Main {
 
             List<String> colors = new ArrayList<String>();
             for (Map.Entry<Object, Object> entry : UIManager.getDefaults().entrySet()) {
-                if (entry.getValue() instanceof Color) {
-                    System.out.println(entry.getKey() + " - " + ((Color) entry.getValue()).getRGB());
+                if (entry.getValue() instanceof Font) {
+                    System.out.println(entry.getKey() + " - ");
                 }
             }
 

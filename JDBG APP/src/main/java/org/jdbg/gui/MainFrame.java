@@ -23,14 +23,17 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         initUI();
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        setPreferredSize(new Dimension(1000, 700));
 
         setupMenuBar();
         setupTopButtons();
         setupSplitPane();
-
+        setupBottomBar();
         pack();
         getContentPane().requestFocus(); // remove annoying focus thing
         Logger.log("JDBG initialisation complete");
+
+
     }
 
     void initUI() {
@@ -47,6 +50,21 @@ public class MainFrame extends JFrame {
     }
     void setupMenuBar() {
         setJMenuBar(new TopMenuBar());
+    }
+
+    void setupBottomBar() {
+        JPanel bottomBar = new JPanel();
+
+        bottomBar.setBackground(UIManager.getColor("TextField.background"));
+        bottomBar.setLayout(new FlowLayout(FlowLayout.LEADING));
+        bottomBar.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        bottomBar.add(new JTextArea("JDBG v1.0.0"));
+
+        bottomBar.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, UIManager.getColor("Button.borderColor")));
+
+        getContentPane().add(bottomBar);
+
     }
 
     void setupTopButtons() {
@@ -66,7 +84,10 @@ public class MainFrame extends JFrame {
 
     void setupSplitPane() {
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setPreferredSize(new Dimension(1000, 700));
+
+
+        // TODO not sure exactly why but without this it breaks the ui if it goes below the preferred size (bruh)
+        splitPane.setPreferredSize(new Dimension(0, 0));
         splitPane.setResizeWeight(0.87);
         splitPane.add(mainTabbedPane);
         splitPane.add((new LogPane()));

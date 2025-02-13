@@ -7,11 +7,11 @@ import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.*;
 import com.sun.jna.platform.win32.WinNT.HANDLE;
 import com.sun.jna.ptr.IntByReference;
+import org.jdbg.core.attach.breakpoint.BreakpointManager;
 import org.jdbg.core.pipeline.impl.main.PipelineMain;
 import org.jdbg.gui.MainFrame;
 import org.jdbg.logger.Logger;
 
-import java.awt.image.Kernel;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
@@ -24,6 +24,10 @@ public class AttachManager {
     private boolean attached = false;
 
     private int currentPid;
+
+    private BreakpointManager breakpointManager;
+
+
     public AttachManager() {
         instance = this;
     }
@@ -40,6 +44,7 @@ public class AttachManager {
         currentPid = pid;
         MainFrame.getInstance().setAttached(String.valueOf(pid));
         attached = true;
+        breakpointManager = new BreakpointManager(pid);
 
         return true;
 
@@ -183,5 +188,9 @@ public class AttachManager {
         if(instance == null)
             instance = new AttachManager();
         return instance;
+    }
+
+    public BreakpointManager getBreakpointManager() {
+        return breakpointManager;
     }
 }

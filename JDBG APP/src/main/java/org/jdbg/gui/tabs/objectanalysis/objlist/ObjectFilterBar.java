@@ -2,6 +2,7 @@ package org.jdbg.gui.tabs.objectanalysis.objlist;
 
 import org.jdbg.core.CoreInterface;
 import org.jdbg.gui.tabs.objectanalysis.ObjectAnalysisClassTree;
+import org.jdbg.gui.util.PlaceholderTextField;
 import org.jdbg.logger.Logger;
 
 import javax.swing.*;
@@ -12,7 +13,7 @@ import java.awt.event.ActionListener;
 public class ObjectFilterBar extends JPanel {
 
     JButton filterButton = new JButton("Filter");
-    JTextField filterField = new JTextField();
+    PlaceholderTextField filterField;
 
     ObjectAnalysisClassTree tree;
 
@@ -21,6 +22,8 @@ public class ObjectFilterBar extends JPanel {
         this.tree = tree;
         this.objectList = list;
         add(filterButton);
+        filterField = new PlaceholderTextField();
+        filterField.setPlaceholder("E.g. obj.f3 > 3");
         add(filterField);
         setBackground(UIManager.getColor("TextArea.background"));
 

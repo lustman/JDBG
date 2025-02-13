@@ -15,6 +15,11 @@ public class LogPane extends JTabbedPane {
     }
 
     private void addLog(String name, Log log) {
-        addTab(name, new JScrollPane(log, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,  JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
+
+        JScrollPane s = new JScrollPane(log, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,  JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        s.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, UIManager.getColor("Button.borderColor")));
+
+
+        addTab(name, s);
     }
 }

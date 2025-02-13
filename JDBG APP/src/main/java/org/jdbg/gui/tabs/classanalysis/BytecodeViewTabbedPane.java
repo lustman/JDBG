@@ -1,6 +1,7 @@
 package org.jdbg.gui.tabs.classanalysis;
 
 import org.jdbg.gui.tabs.classanalysis.asm.AsmTabbedPane;
+import org.jdbg.gui.tabs.classanalysis.codepanel.AsmCodePanel;
 import org.jdbg.gui.tabs.classanalysis.codepanel.CodePanel;
 import org.jdbg.gui.tabs.classanalysis.tabbed.ThinTabbedPane;
 
@@ -11,8 +12,8 @@ public class BytecodeViewTabbedPane extends ThinTabbedPane {
     CodePanel dec;
     AsmTabbedPane asm;
     public BytecodeViewTabbedPane(CodePanel decompiled, AsmTabbedPane assembly) {
-        addTab("Decompiled View", decompiled);
         addTab("Assembly View", assembly);
+        addTab("Decompiled View", decompiled);
         this.dec = decompiled;
         this.asm = assembly;
 

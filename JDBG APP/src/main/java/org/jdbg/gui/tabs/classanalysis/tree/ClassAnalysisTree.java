@@ -27,7 +27,7 @@ public class ClassAnalysisTree extends ClassTree {
             return;
         }
 
-        Iterator<? extends TreeNode> it = node.children().asIterator();
+        Iterator<? extends TreeNode> it = node.allChildren().asIterator();
         while(it.hasNext()) {
             explore((ClassTreeNode) it.next());
         }

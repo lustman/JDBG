@@ -2,6 +2,7 @@ package org.jdbg.gui.tabs.classanalysis.tabbed.factory;
 
 import org.jdbg.gui.tabs.classanalysis.BytecodeViewTabbedPane;
 import org.jdbg.gui.tabs.classanalysis.asm.AsmTabbedPane;
+import org.jdbg.gui.tabs.classanalysis.codepanel.AsmCodePanel;
 import org.jdbg.gui.tabs.classanalysis.codepanel.CodePanel;
 import org.jdbg.gui.tabs.classanalysis.tabbed.ThinTabbedPane;
 

@@ -1,6 +1,8 @@
 package org.jdbg.gui.tabs.classanalysis;
 
 import org.jdbg.gui.tabs.classanalysis.asm.AsmTabbedPane;
+import org.jdbg.gui.tabs.classanalysis.breakpoint.BreakpointBar;
+import org.jdbg.gui.tabs.classanalysis.codepanel.AsmCodePanel;
 import org.jdbg.gui.tabs.classanalysis.codepanel.CodePanel;
 import org.jdbg.gui.tabs.ClassTreeNode;
 import org.jdbg.gui.tabs.classanalysis.tabbed.factory.AsmTabbedFactory;
@@ -14,6 +16,8 @@ public class TabClasses extends JSplitPane {
 
     JScrollPane hierarchy;
     BytecodeViewTabbedPane panel;
+
+    BreakpointBar bar;
     public TabClasses(ClassTreeNode node) {
         super(JSplitPane.HORIZONTAL_SPLIT);
         setResizeWeight(0.15);
@@ -24,12 +28,16 @@ public class TabClasses extends JSplitPane {
 
 
         this.panel = (BytecodeViewTabbedPane)new BytecodeViewFactory(new CodePanel(), (AsmTabbedPane) new AsmTabbedFactory().makePane()).makePane();
-
+        this.bar = new BreakpointBar();
+        JPanel container = new JPanel();
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        container.add(bar);
+        container.add(panel);
 
         setFocusable(false);
         panel.setBackground(new JFrame().getBackground());
         add(analysisPanel);
-        add(panel);
+        add(container);
     }
 
     public void init(String dec, byte[] klass) {
