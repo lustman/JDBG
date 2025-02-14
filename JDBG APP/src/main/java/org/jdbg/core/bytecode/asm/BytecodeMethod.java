@@ -22,7 +22,12 @@ public class BytecodeMethod {
 
     private String identifier;
 
-    public BytecodeMethod(InsnList instructions, List<String> textFormat, List<Integer> offsets, String name, String signature, int modifiers) {
+    private String parentClass;
+
+    private int index;
+
+    public BytecodeMethod(String parentClass, InsnList instructions, List<String> textFormat, List<Integer> offsets, String name, String signature, int modifiers, int index) {
+        this.parentClass = parentClass;
         this.instructions = instructions;
         this.textFormat = textFormat;
         this.offsets = offsets;
@@ -30,6 +35,7 @@ public class BytecodeMethod {
         this.signature = signature;
         this.modifiers = modifiers;
         this.identifier = getIdentifier();
+        this.index = index;
     }
 
     public String getIdentifier() {
@@ -76,5 +82,13 @@ public class BytecodeMethod {
 
     public int getModifiers() {
         return modifiers;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public String getParentClass() {
+        return parentClass;
     }
 }

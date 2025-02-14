@@ -200,7 +200,7 @@ void collectVariables(std::string& expressionString, std::vector<std::string>& v
 
 
 
-int HandlerTagObjects::handle(char* data, DWORD length, char* responseBuffer, std::map<std::string, jclass>& klassMap) {
+int HandlerTagObjects::handle(char* data, DWORD length, char* responseBuffer, int& status, std::map<std::string, jclass>& klassMap) {
 	char* filterString = data;
 	while (*(filterString++) != '\0') {}
 

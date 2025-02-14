@@ -194,14 +194,6 @@ public class CoreInterface {
         return null;
     }
 
-
-
-
-
-
-
-
-
     public byte[] getClassData(String name) {
         if(!AttachManager.getInstance().isAttached())
             return new byte[0];
@@ -215,7 +207,47 @@ public class CoreInterface {
     }
 
 
+    byte[] getBreakpointMessage(String klassName, int methodIdx, int offset) {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(4);
+        byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        byteBuffer.putInt(methodIdx);
+        byte[] methodIdxBytes = byteBuffer.array();
 
+        ByteBuffer other = ByteBuffer.allocate(4);
+        other.order(ByteOrder.LITTLE_ENDIAN);
+        other.putInt(offset);
+        byte[] offsetBytes = other.array();
+
+
+        byte[] klassBytes = klassName.getBytes(StandardCharsets.UTF_8);
+        byte[] buffer = new byte[methodIdxBytes.length + offsetBytes.length + klassBytes.length];
+
+        System.arraycopy(methodIdxBytes, 0, buffer, 0, methodIdxBytes.length);
+        System.arraycopy(offsetBytes, 0, buffer, 4, offsetBytes.length);
+        System.arraycopy(klassBytes, 0, buffer, 8, klassBytes.length);
+        return buffer;
+    }
+
+
+    public boolean addBreakpoint(String klassName, int methodIdx, int offset) {
+        klassName += '\0';
+        Logger.log("Getting breakpoints for " + klassName + " @ " + methodIdx + " at offset " + offset);
+        byte[] msg = getBreakpointMessage(klassName, methodIdx, offset);
+
+        PipelineMain.ClientResponse response = PipelineMain.getInstance().sendAndAwait(PipelineMain.ServerCommand.ADD_BREAKPOINT,
+                msg);
+
+        if(response.response.length == 0) {
+            return false;
+        }
+
+        if(response.status == PipelineMain.ResponseStatus.ERROR) {
+            Logger.log("There was an error adding breakpoint");
+            return false;
+        }
+
+        return true;
+    }
 
 
 

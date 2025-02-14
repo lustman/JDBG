@@ -1,6 +1,7 @@
 #include "handlerobjectfields.h"
 #include "json.hpp"
 #include "jni.h"
+#include "util.h"
 
 using json = nlohmann::basic_json<>;
 
@@ -93,7 +94,7 @@ void HandlerObjectFields::buildFields(json& response, jclass& klass, jobject& ob
 	}
 }
 
-int HandlerObjectFields::handle(char* data, DWORD length, char* responseBuffer, std::map<std::string, jclass>& klassMap) {
+int HandlerObjectFields::handle(char* data, DWORD length, char* responseBuffer, int& status, std::map<std::string, jclass>& klassMap) {
 	long tag = *((long*)data);
 	char* klass = (data + 4);
 

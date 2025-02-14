@@ -50,8 +50,8 @@ public class MainTabbedPane extends JTabbedPane {
         return classes;
     }
 
-    public void initClass(String dec, byte[] klass) {
-        classes.init(dec, klass);
+    public void initClass(String klassName, String dec, byte[] klass) {
+        classes.init(klassName, dec, klass);
     }
 
 

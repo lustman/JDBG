@@ -11,6 +11,8 @@
 #include "handlergetreferences.h"
 #include "handlerobjectfields.h"
 #include "handlersetobject.h"
+#include "handlersetbreakpoint.h"
+#include "handlerclearbreakpoint.h"
 
 #include <map>
 #include <string>
@@ -75,6 +77,8 @@ void JdbgPipeline::startListen(jvmtiEnv* jvmti, JNIEnv* jni) {
 	handlers.push_back(std::make_unique<HandlerGetReferences>(HandlerGetReferences{ jvmti, jni, this }));
 	handlers.push_back(std::make_unique<HandlerObjectFields>(HandlerObjectFields{ jvmti, jni, this }));
 	handlers.push_back(std::make_unique<HandlerSetObject>(HandlerSetObject{ jvmti, jni, this }));
+	handlers.push_back(std::make_unique<HandlerSetBreakpoint>(HandlerSetBreakpoint{ jvmti, jni, this }));
+	handlers.push_back(std::make_unique<HandlerClearBreakpoint>(HandlerClearBreakpoint{ jvmti, jni, this }));
 
 	for (std::unique_ptr<Handler>& h : handlers) {
 		h->setLogPipeline(&log);
@@ -132,8 +136,9 @@ void JdbgPipeline::startListen(jvmtiEnv* jvmti, JNIEnv* jni) {
 			if (h->getCommand() == command) {
 
 				// make space for the code byte
-				responseBuffer[0] = 0;
-				int len = h->handle(buffer + 1, bytesRead - 1, responseBuffer+1, klassMap);
+				int status = 0;
+				int len = h->handle(buffer + 1, bytesRead - 1, responseBuffer+1, status, klassMap);
+				responseBuffer[0] = status;
 				sendData(responseBuffer, len + 1);
 
 			}

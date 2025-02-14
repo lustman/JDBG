@@ -22,7 +22,9 @@ public class PipelineMain extends Pipeline {
 
         SET_OBJECT,
 
-        SET_FIELD
+        SET_FIELD,
+        ADD_BREAKPOINT,
+        CLEAR_BREAKPOINT
     }
 
     public enum ResponseStatus {

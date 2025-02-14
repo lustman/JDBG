@@ -112,7 +112,7 @@ bool dfs(int node, boolean isFirst, std::string& originalClass,
 }
 
 
-int HandlerGetReferences::handle(char* data, DWORD length, char* responseBuffer, std::map<std::string, jclass>& klassMap) {
+int HandlerGetReferences::handle(char* data, DWORD length, char* responseBuffer, int& status, std::map<std::string, jclass>& klassMap) {
 	long tag = *((long*)data);
 	char* klass = (data + 4);
 

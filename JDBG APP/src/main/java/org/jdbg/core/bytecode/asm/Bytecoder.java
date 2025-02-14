@@ -12,22 +12,24 @@ public class Bytecoder {
     List<BytecodeMethod> methods = new ArrayList<>();
     List<BytecodeField> fields = new ArrayList<>();
 
-    public Bytecoder(byte[] klassBytes) {
+    public Bytecoder(String parentClass, byte[] klassBytes) {
 
         OffsetClassReader reader = new OffsetClassReader(klassBytes);
         OffsetClassNode node = new OffsetClassNode(reader);
         reader.accept(node, ClassReader.SKIP_FRAMES);
 
+        int i = 0;
         for(MethodNode m : node.methods) {
             OffsetMethodNode method = (OffsetMethodNode) m;
-            BytecodeMethod theMethod = new BytecodeMethod(method.instructions, buildText(m.instructions), method.getOffsets(), method.name, method.desc, method.access);
+            BytecodeMethod theMethod = new BytecodeMethod(parentClass, method.instructions, buildText(m.instructions),
+                    method.getOffsets(), method.name, method.desc, method.access, i);
 
-
-            System.out.println(theMethod.instructions.size() + " - " + theMethod.offsets.size() + " - " + theMethod.textFormat.size());
             if(theMethod.instructions.size() != theMethod.textFormat.size()) {
                 System.out.println(method.name);
             }
             methods.add(theMethod);
+
+            i++;
         }
 
         for(FieldNode field : node.fields) {

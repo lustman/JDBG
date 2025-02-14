@@ -12,7 +12,7 @@ HandlerClassNames::HandlerClassNames(jvmtiEnv* jvmti, JNIEnv* jni, JdbgPipeline*
 
 
 
-int HandlerClassNames::handle(char* data, DWORD length, char* responseBuffer, std::map<std::string, jclass>& klassMap) {
+int HandlerClassNames::handle(char* data, DWORD length, char* responseBuffer, int& status, std::map<std::string, jclass>& klassMap) {
 	int cur = 0;
 	for (auto const& x : klassMap) {
 		jclass klass = x.second;

@@ -44,7 +44,7 @@ public class ClassAnalysisTree extends ClassTree {
 
         VineflowerDecompiler decompiler = new VineflowerDecompiler(bytes, klass.getFullDir());
         String s = decompiler.decompile();
-        MainFrame.getInstance().getMainPane().initClass(s, bytes);
+        MainFrame.getInstance().getMainPane().initClass(klass.getFullDir(), s, bytes);
     }
 
     @Override

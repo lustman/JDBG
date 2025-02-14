@@ -4,6 +4,8 @@
 #include "jdbgpipeline.h"
 #include <jni.h>|
 #include <jvmti.h>
+#include <string>
+#include <Zydis.h>
 
 struct EnvResult {
     char code;
@@ -23,6 +25,9 @@ EnvResult getEnv() {
 
 
     HMODULE hJvm = GetModuleHandle(L"jvm.dll");
+    
+    MessageBoxA(nullptr, std::to_string((uintptr_t)hJvm).c_str(), "Insider", MB_ICONERROR);
+
     if (hJvm == NULL) {
         MessageBoxA(nullptr, "Failed to get jvm.dll handle", "Insider", MB_ICONERROR);
         return EnvResult{ -1, nullptr,nullptr,nullptr };
@@ -88,11 +93,21 @@ DWORD WINAPI start(LPVOID lpParam) {
      capabilities.can_get_bytecodes = 1;
      capabilities.can_get_synthetic_attribute = 1;
      capabilities.can_suspend = 1;
+     capabilities.can_generate_breakpoint_events = 1;
 
 
      jvmtiError error = jvmti->AddCapabilities(&capabilities);
+
+     void* addy = (void*)jvmti->functions->AddCapabilities;
+
+     MessageBoxA(nullptr,
+         (std::string{ "ThingOO: " } + std::to_string(reinterpret_cast<uintptr_t>(addy))).c_str(),
+         "Insider", MB_ICONERROR);
+
      if (error != JVMTI_ERROR_NONE) {
-         MessageBoxA(nullptr, "Failed to add capabilities", "Insider", MB_ICONERROR);
+         MessageBoxA(nullptr, (std::string{ "Failed to add capabilities. Error code: " } + std::to_string(error)).c_str(), "Insider", MB_ICONERROR);
+         serverPipe.sendStatus(2);
+
          return 0;
      }
 

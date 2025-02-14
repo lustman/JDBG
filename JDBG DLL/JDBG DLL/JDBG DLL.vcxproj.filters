@@ -37,6 +37,15 @@
     <Filter Include="Source Files\pipeline\impl\jdbg\handler">
       <UniqueIdentifier>{82b861a6-1fe1-41e4-9eba-1723ee22849d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\pipeline\impl\jdbg\handler\breakpoint">
+      <UniqueIdentifier>{fee24b9d-385c-4b49-bf2d-b546b54e96c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pipeline\impl\jdbg\handler\breakpoint">
+      <UniqueIdentifier>{4fecb027-0f47-4201-9919-2fefeab9955a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\lib">
+      <UniqueIdentifier>{b40f1573-c2cb-4c20-bb41-31aae8e11a3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -75,6 +84,15 @@
     <ClCompile Include="handlersetobject.cpp">
       <Filter>Source Files\pipeline\impl\jdbg\handler</Filter>
     </ClCompile>
+    <ClCompile Include="handlersetbreakpoint.cpp">
+      <Filter>Source Files\pipeline\impl\jdbg\handler\breakpoint</Filter>
+    </ClCompile>
+    <ClCompile Include="handlerclearbreakpoint.cpp">
+      <Filter>Source Files\pipeline\impl\jdbg\handler\breakpoint</Filter>
+    </ClCompile>
+    <ClCompile Include="util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pipeline.h">
@@ -101,20 +119,26 @@
     <ClInclude Include="logpipeline.h">
       <Filter>Header Files\pipeline\impl\jdbg</Filter>
     </ClInclude>
-    <ClInclude Include="util.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="handlergetreferences.h">
       <Filter>Header Files\pipeline\impl\jdbg\handler</Filter>
     </ClInclude>
     <ClInclude Include="handlerobjectfields.h">
       <Filter>Header Files\pipeline\impl\jdbg\handler</Filter>
     </ClInclude>
-    <ClInclude Include="json.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="handlersetobject.h">
       <Filter>Header Files\pipeline\impl\jdbg\handler</Filter>
+    </ClInclude>
+    <ClInclude Include="handlersetbreakpoint.h">
+      <Filter>Header Files\pipeline\impl\jdbg\handler\breakpoint</Filter>
+    </ClInclude>
+    <ClInclude Include="handlerclearbreakpoint.h">
+      <Filter>Header Files\pipeline\impl\jdbg\handler\breakpoint</Filter>
+    </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="json.hpp">
+      <Filter>Header Files\lib</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

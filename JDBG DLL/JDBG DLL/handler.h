@@ -28,7 +28,7 @@ public:
 	}
 
 
-	virtual int handle(char* data, DWORD length, char* responseBuffer, std::map<std::string, jclass>& klassMap) { return 0; };
+	virtual int handle(char* data, DWORD length, char* responseBuffer, int& status, std::map<std::string, jclass>& klassMap) { return 0; };
 
 	void setLogPipeline(LogPipeline* p) {
 		logPipeline = p;

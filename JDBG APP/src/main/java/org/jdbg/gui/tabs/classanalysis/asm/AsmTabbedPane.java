@@ -36,13 +36,13 @@ public class AsmTabbedPane extends ThinTabbedPane {
         setBackground(UIManager.getColor("TabbedPane.buttonHoverBackground"));
     }
 
-    public void init(byte[] bytes) {
+    public void init(String klass, byte[] bytes) {
         removeAll();
         Icon fieldIcon = Util.getIcon("assets/icons/hexagon-letter-f.png", 15, 15);
         Icon methodIcon = Util.getIcon("assets/icons/hexagon-letter-m.png", 15, 15);
 
 
-        Bytecoder b = new Bytecoder(bytes);
+        Bytecoder b = new Bytecoder(klass, bytes);
 
 
         for(BytecodeMethod method : b.getMethods()) {

@@ -40,9 +40,9 @@ public class TabClasses extends JSplitPane {
         add(container);
     }
 
-    public void init(String dec, byte[] klass) {
+    public void init(String klassName, String dec, byte[] klass) {
         panel.getDec().setText(dec);
-        panel.getAsm().init(klass);
+        panel.getAsm().init(klassName, klass);
     }
 
 }

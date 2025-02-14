@@ -10,25 +10,19 @@ HandlerSetObject::HandlerSetObject(jvmtiEnv* jvmti, JNIEnv* jni, JdbgPipeline* p
 
 
 
-int HandlerSetObject::handle(char* data, DWORD length, char* responseBuffer, std::map<std::string, jclass>& klassMap) {
-
-	MessageBoxA(nullptr, "A", "Insider", MB_ICONERROR);
+int HandlerSetObject::handle(char* data, DWORD length, char* responseBuffer, int& status, std::map<std::string, jclass>& klassMap) {
 
 	json response{ nlohmann::json::parse(data) };
 
 	long tag{ response.at("tag") };
 	std::string klass{ response.at("klass") };
 		
-	MessageBoxA(nullptr, "B", "Insider", MB_ICONERROR);
-
 	auto result{ getObject(tag, klass.c_str(), klassMap)};
 	if (!result.has_value()) {
 		return 0;
 	}
 
 	auto [objClass, obj] = (*result);
-
-	MessageBoxA(nullptr, "C", "Insider", MB_ICONERROR);
 
 
 	// make this modular once introduce other types, such as Double, Character etc

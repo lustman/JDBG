@@ -93,7 +93,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include\win32;C:\Program Files\Java\jdk-1.8\include\win32;C:\Users\Roger Du\Documents\boost_1_87_0\boost_1_87_0;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>${SolutionDir}\libs;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include\win32;C:\Program Files\Java\jdk-1.8\include\win32;C:\Users\Roger Du\Documents\boost_1_87_0\boost_1_87_0;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -114,7 +114,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include\win32;C:\Program Files\Java\jdk-1.8\include\win32;C:\Users\Roger Du\Documents\boost_1_87_0\boost_1_87_0;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>${SolutionDir}\libs;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include\win32;C:\Program Files\Java\jdk-1.8\include\win32;C:\Users\Roger Du\Documents\boost_1_87_0\boost_1_87_0;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -136,7 +136,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Program Files\Java\jdk-1.8\include;C:\Program Files\Java\jdk-1.8\include\win32;C:\Users\Roger Du\Documents\boost_1_87_0\boost_1_87_0;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libs;C:\Program Files\Java\jdk-1.8\include;C:\Program Files\Java\jdk-1.8\include\win32;C:\Users\Roger Du\Documents\boost_1_87_0\boost_1_87_0;</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -164,7 +164,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Program Files\Java\jdk-1.8\include;C:\Program Files\Java\jdk-1.8\include\win32;C:\Users\Roger Du\Documents\boost_1_87_0\boost_1_87_0;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libs;C:\Program Files\Java\jdk-1.8\include;C:\Program Files\Java\jdk-1.8\include\win32;C:\Users\Roger Du\Documents\boost_1_87_0\boost_1_87_0;</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -186,8 +186,10 @@
     <ClCompile Include="handlerclassdata.cpp" />
     <ClCompile Include="handlerclassnames.cpp" />
     <ClCompile Include="handlerclassnames.h" />
+    <ClCompile Include="handlerclearbreakpoint.cpp" />
     <ClCompile Include="handlergetreferences.cpp" />
     <ClCompile Include="handlerobjectfields.cpp" />
+    <ClCompile Include="handlersetbreakpoint.cpp" />
     <ClCompile Include="handlersetobject.cpp" />
     <ClCompile Include="handlertagobjects.cpp" />
     <ClCompile Include="jdbgpipeline.cpp" />
@@ -197,18 +199,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="exprtk.hpp" />
+    <ClInclude Include="handlerclearbreakpoint.h" />
     <ClInclude Include="handlergetreferences.h" />
     <ClInclude Include="handlerobjectfields.h" />
+    <ClInclude Include="handlersetbreakpoint.h" />
     <ClInclude Include="handlersetobject.h" />
     <ClInclude Include="handlertagobjects.h" />
     <ClInclude Include="handler.h" />
     <ClInclude Include="handlerclassdata.h" />
     <ClInclude Include="jdbgpipeline.h" />
     <ClInclude Include="json.hpp" />
-    <ClInclude Include="util.h" />
+    <ClCompile Include="util.cpp" />
     <ClInclude Include="logpipeline.h" />
     <ClInclude Include="objecthandler.h" />
     <ClInclude Include="pipeline.h" />
+    <ClInclude Include="util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

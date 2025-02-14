@@ -53,7 +53,7 @@ HandlerClassData::HandlerClassData(jvmtiEnv* jvmti, JNIEnv* jni, JdbgPipeline* p
 }
 
 
-int HandlerClassData::handle(char* data, DWORD length, char* responseBuffer, std::map<std::string, jclass>& klassMap) {
+int HandlerClassData::handle(char* data, DWORD length, char* responseBuffer, int& status, std::map<std::string, jclass>& klassMap) {
 
     jvmtiEventCallbacks callbacks;
     memset(&callbacks, 0, sizeof(callbacks));
