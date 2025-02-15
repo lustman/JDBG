@@ -9,6 +9,7 @@ public class PipelineBreakpoint extends Pipeline {
 
     public PipelineBreakpoint() {
         super("\\\\.\\pipe\\jdbg_breakpoint");
+
     }
     public void start() {
         // await it
