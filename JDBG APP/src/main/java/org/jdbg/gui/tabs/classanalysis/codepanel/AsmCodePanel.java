@@ -5,6 +5,7 @@ import org.fife.ui.rtextarea.IconRowHeader;
 import org.fife.ui.rtextarea.IconRowListener;
 import org.jdbg.Util;
 import org.jdbg.core.attach.AttachManager;
+import org.jdbg.core.attach.breakpoint.BreakpointManager;
 import org.jdbg.logger.Logger;
 
 import javax.swing.*;
@@ -13,11 +14,13 @@ import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
+import java.util.Set;
 
 public class AsmCodePanel extends CodePanel {
 
 
-    public AsmCodePanel() {
+    Set<BreakpointManager.Breakpoint> breakpoints;
+    public AsmCodePanel(Set<BreakpointManager.Breakpoint> breakPoints) {
         super();
 
         scrollPane.setIconRowHeaderEnabled(true);
@@ -25,11 +28,24 @@ public class AsmCodePanel extends CodePanel {
         scrollPane.getGutter().setBookmarkingEnabled(true);
         scrollPane.getGutter().setBookmarkIcon(createBreakpointIcon());
         scrollPane.getGutter().addIconRowListener(AttachManager.getInstance().getBreakpointManager());
-
-        Icon folderIcon = Util.getIcon("assets/icons/ic_fluent_folder_24_filled.png", 15, 15);
+        this.breakpoints = breakPoints;
 
 
     }
+
+    @Override
+    public void setText(String s) {
+        super.setText(s);
+
+        breakpoints.forEach((breakpoint) -> {
+            try {
+                scrollPane.getGutter().toggleBookmark(breakpoint.line);
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     /**
      * Creates a simple red circle icon to represent a breakpoint.
      */

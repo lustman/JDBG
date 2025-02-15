@@ -1,11 +1,11 @@
 #pragma once
 
-#include "breakpointhandler.h"
+#include "objecthandler.h"
 #include "jdbgpipeline.h"
 #include <map>
 #include <string>
 
-class HandlerSetBreakpoint : public BreakpointHandler {
+class HandlerSetBreakpoint : public ObjectHandler {
 
 public:
 	HandlerSetBreakpoint(jvmtiEnv* jvmti, JNIEnv* jni, JdbgPipeline* pipeline);

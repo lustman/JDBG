@@ -248,7 +248,7 @@ public class CoreInterface {
             return false;
         }
 
-        if(response.status == PipelineMain.ResponseStatus.ERROR) {
+        if(response.status != PipelineMain.ResponseStatus.OK) {
             Logger.log("There was an error adding breakpoint");
             return false;
         }

@@ -4,7 +4,7 @@
 
 
 
-HandlerClearBreakpoint::HandlerClearBreakpoint(jvmtiEnv* jvmti, JNIEnv* jni, JdbgPipeline* pipeline) : BreakpointHandler{ CLEAR_BREAKPOINT, jvmti, jni, pipeline } {
+HandlerClearBreakpoint::HandlerClearBreakpoint(jvmtiEnv* jvmti, JNIEnv* jni, JdbgPipeline* pipeline) : ObjectHandler{ CLEAR_BREAKPOINT, jvmti, jni, pipeline } {
 
 }
 

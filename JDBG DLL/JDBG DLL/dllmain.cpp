@@ -7,8 +7,8 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
-#include "breakpointhandler.h"
 #include "handlerclassdata.h"
+#include "breakpointpipeline.h"
 
 #define ZYDIS_EXPORT
 #include <Zydis.h>

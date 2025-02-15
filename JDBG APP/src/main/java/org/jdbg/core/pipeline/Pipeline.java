@@ -36,7 +36,7 @@ public class Pipeline {
                 null);
 
         if(pipeHandle==null || pipeHandle == WinBase.INVALID_HANDLE_VALUE) {
-            Logger.log("Failed to create pipe");
+            Logger.log("Failed to create pipe for: " + getClass().getName());
             return;
         }
 

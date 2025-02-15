@@ -182,8 +182,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\libs\Zydis.c" />
-    <ClCompile Include="breakpointhandler.cpp" />
+    <ClCompile Include="breakpointpipeline.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="handlerclassdata.cpp" />
     <ClCompile Include="handlerclassnames.cpp" />
@@ -200,8 +199,7 @@
     <ClCompile Include="pipeline.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="breakpointhandler.h" />
-    <ClInclude Include="exprtk.hpp" />
+    <ClInclude Include="breakpointpipeline.h" />
     <ClInclude Include="handlerclearbreakpoint.h" />
     <ClInclude Include="handlergetreferences.h" />
     <ClInclude Include="handlerobjectfields.h" />
@@ -211,7 +209,6 @@
     <ClInclude Include="handler.h" />
     <ClInclude Include="handlerclassdata.h" />
     <ClInclude Include="jdbgpipeline.h" />
-    <ClInclude Include="json.hpp" />
     <ClCompile Include="util.cpp" />
     <ClInclude Include="logpipeline.h" />
     <ClInclude Include="objecthandler.h" />

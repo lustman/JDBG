@@ -8,6 +8,7 @@ import com.sun.jna.platform.win32.*;
 import com.sun.jna.platform.win32.WinNT.HANDLE;
 import com.sun.jna.ptr.IntByReference;
 import org.jdbg.core.attach.breakpoint.BreakpointManager;
+import org.jdbg.core.pipeline.impl.PipelineBreakpoint;
 import org.jdbg.core.pipeline.impl.PipelineMain;
 import org.jdbg.gui.MainFrame;
 import org.jdbg.logger.Logger;
@@ -27,7 +28,6 @@ public class AttachManager {
 
     private BreakpointManager breakpointManager;
 
-
     public AttachManager() {
         instance = this;
     }
@@ -37,6 +37,9 @@ public class AttachManager {
         return false;
     }
     public boolean attach(int pid) {
+
+
+
         boolean processAttach = attachProcess(pid);
         if(!processAttach) return false;
 
@@ -45,7 +48,6 @@ public class AttachManager {
         MainFrame.getInstance().setAttached(String.valueOf(pid));
         attached = true;
         breakpointManager = new BreakpointManager(pid);
-
         return true;
 
     }
@@ -193,4 +195,5 @@ public class AttachManager {
     public BreakpointManager getBreakpointManager() {
         return breakpointManager;
     }
+
 }

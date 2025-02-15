@@ -43,9 +43,6 @@
     <Filter Include="Header Files\pipeline\impl\jdbg\handler\breakpoint">
       <UniqueIdentifier>{4fecb027-0f47-4201-9919-2fefeab9955a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\lib">
-      <UniqueIdentifier>{b40f1573-c2cb-4c20-bb41-31aae8e11a3f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -93,10 +90,7 @@
     <ClCompile Include="util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\libs\Zydis.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="breakpointhandler.cpp">
+    <ClCompile Include="breakpointpipeline.cpp">
       <Filter>Source Files\pipeline\impl\jdbg</Filter>
     </ClCompile>
   </ItemGroup>
@@ -115,9 +109,6 @@
     </ClInclude>
     <ClInclude Include="handlertagobjects.h">
       <Filter>Header Files\pipeline\impl\jdbg\handler</Filter>
-    </ClInclude>
-    <ClInclude Include="exprtk.hpp">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="objecthandler.h">
       <Filter>Header Files\pipeline\impl\jdbg</Filter>
@@ -143,10 +134,7 @@
     <ClInclude Include="util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json.hpp">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="breakpointhandler.h">
+    <ClInclude Include="breakpointpipeline.h">
       <Filter>Header Files\pipeline\impl\jdbg</Filter>
     </ClInclude>
   </ItemGroup>

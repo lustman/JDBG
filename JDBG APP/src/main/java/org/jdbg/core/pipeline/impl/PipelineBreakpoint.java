@@ -12,12 +12,14 @@ public class PipelineBreakpoint extends Pipeline {
     }
     public void start() {
         // await it
+
+        Logger.log("Awaiting breakpoint pipe");
         Kernel32.INSTANCE.ConnectNamedPipe(pipeHandle, null);
 
         Logger.log("Client connected to breakpoint pipe");
         while(true) {
             byte[] bytes = readMessage();
-            Logger.log("Got a log msg");
+            Logger.log("Got a Breakpoint msg");
             LogAgent.getInstance().addLog(new String(bytes));
         }
     }

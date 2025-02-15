@@ -3,6 +3,7 @@ package org.jdbg;
 import com.formdev.flatlaf.FlatDarkLaf;
 import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
 import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
+import org.jdbg.core.pipeline.impl.PipelineBreakpoint;
 import org.jdbg.core.pipeline.impl.PipelineLogDll;
 import org.jdbg.gui.MainFrame;
 import org.jdbg.core.pipeline.impl.PipelineMain;
@@ -51,6 +52,10 @@ public class Main {
                     PipelineLogDll.getInstance().start();
                 });
                 logDll.start();
+
+                PipelineBreakpoint breakpointPipeline = new PipelineBreakpoint();
+                Thread breakpointThread = new Thread(breakpointPipeline::start);
+                breakpointThread.start();
 
 
                 Thread shutdown = new Thread(() -> {

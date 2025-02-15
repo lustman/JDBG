@@ -12,14 +12,17 @@ import java.util.*;
 
 public class BreakpointManager implements IconRowListener {
 
-    static class Breakpoint {
+    public static class Breakpoint {
 
-        int methodIdx;
-        int offset;
+        public int methodIdx;
+        public int offset;
 
-        public Breakpoint(int methodIdx, int offset) {
+        public int line;
+
+        public Breakpoint(int methodIdx, int offset, int line) {
             this.offset = offset;
             this.methodIdx = methodIdx;
+            this.line = line;
         }
 
         @Override
@@ -36,6 +39,9 @@ public class BreakpointManager implements IconRowListener {
             return offset == ((Breakpoint) obj).offset && methodIdx == ((Breakpoint) obj).methodIdx;
         }
     }
+
+
+    private boolean breakpointHit = false;
 
     protected BytecodeMethod activeMethod;
 
@@ -59,7 +65,7 @@ public class BreakpointManager implements IconRowListener {
         }
         int offset =  activeMethod.getOffsets().get(iconRowEvent.getLine()-1);
 
-        Breakpoint b = new Breakpoint(activeMethod.getIndex(), offset);
+        Breakpoint b = new Breakpoint(activeMethod.getIndex(), offset, iconRowEvent.getLine());
 
 
         if(breakpoints.contains(b)) {
@@ -73,19 +79,20 @@ public class BreakpointManager implements IconRowListener {
     @Override
     public void bookmarkRemoved(IconRowEvent iconRowEvent) {
         Set<Breakpoint> breakpoints = breakpointMap.computeIfAbsent(activeMethod.getParentClass(), (k) -> new HashSet<>());
-        breakpoints.remove(new Breakpoint(activeMethod.getIndex(), iconRowEvent.getLine()));
+        int offset = activeMethod.getOffsets().get(iconRowEvent.getLine()-1);
+        breakpoints.remove(new Breakpoint(activeMethod.getIndex(), offset, iconRowEvent.getLine()));
     }
-
-
-
-
-
-
-
-
-
 
     public void setActiveMethod(BytecodeMethod activeMethod) {
         this.activeMethod = activeMethod;
     }
+
+
+    public Set<Breakpoint> getBreakpoints(String klass) {
+
+        return breakpointMap.getOrDefault(klass, new HashSet<>());
+    }
+
+
+
 }

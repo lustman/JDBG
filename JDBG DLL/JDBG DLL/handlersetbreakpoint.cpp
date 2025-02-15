@@ -4,7 +4,7 @@
 
 
 
-HandlerSetBreakpoint::HandlerSetBreakpoint(jvmtiEnv* jvmti, JNIEnv* jni, JdbgPipeline* pipeline) : BreakpointHandler{ SET_BREAKPOINT, jvmti, jni, pipeline } {
+HandlerSetBreakpoint::HandlerSetBreakpoint(jvmtiEnv* jvmti, JNIEnv* jni, JdbgPipeline* pipeline) : ObjectHandler{ SET_BREAKPOINT, jvmti, jni, pipeline } {
 
 }
 
@@ -13,8 +13,7 @@ HandlerSetBreakpoint::HandlerSetBreakpoint(jvmtiEnv* jvmti, JNIEnv* jni, JdbgPip
 int HandlerSetBreakpoint::handle(char* data, DWORD length, char* responseBuffer, int& status, std::map<std::string, jclass>& klassMap) {
 	int methodIdx = *((int*)data);
 	int offset = *((int*)data + 1);
-	char* klassName = data + 2 * sizeof(int);
-
+	char* klassName = data + 2 * sizeof(int);   
 
     msgLog("methodIdx: " + std::to_string(methodIdx) + " - offset: " + std::to_string(offset));
 
