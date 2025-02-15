@@ -54,25 +54,6 @@ HandlerClassData::HandlerClassData(jvmtiEnv* jvmti, JNIEnv* jni, JdbgPipeline* p
 
 
 int HandlerClassData::handle(char* data, DWORD length, char* responseBuffer, int& status, std::map<std::string, jclass>& klassMap) {
-
-    jvmtiEventCallbacks callbacks;
-    memset(&callbacks, 0, sizeof(callbacks));
-    callbacks.ClassFileLoadHook = &loadHook;
-
-    jvmtiError err = jvmti->SetEventCallbacks(&callbacks, (jint)sizeof(callbacks));
-    if (err) {
-        MessageBoxA(nullptr, "Failed to set event callbacks (1)", "Insider", MB_ICONERROR);
-        return 0;
-    }
-
-    jvmtiError setEvent = jvmti->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL);    
-    if (setEvent) {
-        MessageBoxA(nullptr, "Failed to set event callbacks (2)", "Insider", MB_ICONERROR);
-        return 0;
-    }
-
-
-
     std::map<std::string, jclass>::const_iterator pos = klassMap.find(data);
 
     if (pos == klassMap.end()) {
@@ -88,6 +69,7 @@ int HandlerClassData::handle(char* data, DWORD length, char* responseBuffer, int
     classSize = 0;
     className = data;
     buffer = responseBuffer;
+
 
 
     jvmti->RetransformClasses(1, &klass);

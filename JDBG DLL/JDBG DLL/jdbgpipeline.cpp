@@ -69,7 +69,6 @@ void JdbgPipeline::startListen(jvmtiEnv* jvmti, JNIEnv* jni) {
 	populateKlassMap(jvmti);
 
 
-
 	std::vector<std::unique_ptr<Handler>> handlers;
 	handlers.push_back(std::make_unique<HandlerClassNames>(HandlerClassNames{ jvmti, jni, this }));
 	handlers.push_back(std::make_unique<HandlerClassData>(HandlerClassData{ jvmti, jni, this }));
@@ -83,6 +82,8 @@ void JdbgPipeline::startListen(jvmtiEnv* jvmti, JNIEnv* jni) {
 	for (std::unique_ptr<Handler>& h : handlers) {
 		h->setLogPipeline(&log);
 	}
+
+
 
 	DWORD threadID{ GetThreadId(GetCurrentThread()) };
 	log.addMessage("Thread id: " + std::to_string(threadID));

@@ -3,9 +3,9 @@ package org.jdbg;
 import com.formdev.flatlaf.FlatDarkLaf;
 import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
 import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
-import org.jdbg.core.pipeline.impl.logdll.PipelineLogDll;
+import org.jdbg.core.pipeline.impl.PipelineLogDll;
 import org.jdbg.gui.MainFrame;
-import org.jdbg.core.pipeline.impl.main.PipelineMain;
+import org.jdbg.core.pipeline.impl.PipelineMain;
 import org.jdbg.gui.tabs.classanalysis.codepanel.token.JavaBytecodeTokenMaker;
 
 import javax.swing.*;

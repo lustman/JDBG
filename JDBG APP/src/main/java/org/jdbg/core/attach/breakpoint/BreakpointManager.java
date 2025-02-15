@@ -6,6 +6,7 @@ import org.fife.ui.rtextarea.IconRowListener;
 import org.jdbg.core.CoreInterface;
 import org.jdbg.core.bytecode.asm.BytecodeMethod;
 import org.jdbg.core.util.Pair;
+import org.jdbg.logger.Logger;
 
 import java.util.*;
 
@@ -14,16 +15,16 @@ public class BreakpointManager implements IconRowListener {
     static class Breakpoint {
 
         int methodIdx;
-        int line;
+        int offset;
 
-        public Breakpoint(int methodIdx, int line) {
-            this.line = line;
+        public Breakpoint(int methodIdx, int offset) {
+            this.offset = offset;
             this.methodIdx = methodIdx;
         }
 
         @Override
         public int hashCode() {
-            return (line * 31)^methodIdx;
+            return Objects.hash(offset, methodIdx);
         }
 
         @Override
@@ -32,7 +33,7 @@ public class BreakpointManager implements IconRowListener {
                 return false;
             }
 
-            return line == ((Breakpoint) obj).line && methodIdx == ((Breakpoint) obj).methodIdx;
+            return offset == ((Breakpoint) obj).offset && methodIdx == ((Breakpoint) obj).methodIdx;
         }
     }
 
@@ -51,10 +52,22 @@ public class BreakpointManager implements IconRowListener {
     @Override
     public void bookmarkAdded(IconRowEvent iconRowEvent) {
         Set<Breakpoint> breakpoints = breakpointMap.computeIfAbsent(activeMethod.getParentClass(), (k) -> new HashSet<>());
-        breakpoints.add(new Breakpoint(activeMethod.getIndex(), iconRowEvent.getLine()));
+
+        if(iconRowEvent.getLine()-1 >= activeMethod.getOffsets().size()) {
+            Logger.log("Breakpoint not valid.");
+            return;
+        }
         int offset =  activeMethod.getOffsets().get(iconRowEvent.getLine()-1);
 
-        CoreInterface.getInstance().addBreakpoint(activeMethod.getParentClass(), activeMethod.getIndex(), offset);
+        Breakpoint b = new Breakpoint(activeMethod.getIndex(), offset);
+
+
+        if(breakpoints.contains(b)) {
+            Logger.log("Breakpoint already exists at same offset. Not adding new one.");
+        } else {
+            breakpoints.add(b);
+            CoreInterface.getInstance().addBreakpoint(activeMethod.getParentClass(), activeMethod.getIndex(), offset);
+        }
     }
 
     @Override

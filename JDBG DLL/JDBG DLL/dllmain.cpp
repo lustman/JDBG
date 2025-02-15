@@ -5,6 +5,12 @@
 #include <jni.h>|
 #include <jvmti.h>
 #include <string>
+#include <sstream>
+#include <iomanip>
+#include "breakpointhandler.h"
+#include "handlerclassdata.h"
+
+#define ZYDIS_EXPORT
 #include <Zydis.h>
 
 struct EnvResult {
@@ -26,8 +32,6 @@ EnvResult getEnv() {
 
     HMODULE hJvm = GetModuleHandle(L"jvm.dll");
     
-    MessageBoxA(nullptr, std::to_string((uintptr_t)hJvm).c_str(), "Insider", MB_ICONERROR);
-
     if (hJvm == NULL) {
         MessageBoxA(nullptr, "Failed to get jvm.dll handle", "Insider", MB_ICONERROR);
         return EnvResult{ -1, nullptr,nullptr,nullptr };
@@ -71,51 +75,96 @@ EnvResult getEnv() {
     return EnvResult{ 0, jvmTI, env, JVM };
 }
 
+
+
 DWORD WINAPI start(LPVOID lpParam) {
     JdbgPipeline serverPipe{ L"\\\\.\\pipe\\jdbg" };
 
-     serverPipe.connectPipe();
-     EnvResult env{ getEnv() };
+    serverPipe.connectPipe();
+    EnvResult env{ getEnv() };
 
-     if (env.code != 0) {
-         return 0;
-     }
+    if (env.code != 0) {
+        return 0;
+    }
 
-     jvmtiEnv* jvmti = env.jvmti;
-
-     jvmtiCapabilities capabilities{};
-     capabilities.can_redefine_classes = 1;
-     capabilities.can_redefine_any_class = 1;
-     capabilities.can_tag_objects = 1;
-     capabilities.can_retransform_classes = 1;
-     capabilities.can_retransform_any_class = 1;
-     capabilities.can_generate_all_class_hook_events = 1;
-     capabilities.can_get_bytecodes = 1;
-     capabilities.can_get_synthetic_attribute = 1;
-     capabilities.can_suspend = 1;
-     capabilities.can_generate_breakpoint_events = 1;
+    jvmtiEnv* jvmti = env.jvmti;
 
 
-     jvmtiError error = jvmti->AddCapabilities(&capabilities);
-
-     void* addy = (void*)jvmti->functions->AddCapabilities;
-
-     MessageBoxA(nullptr,
-         (std::string{ "ThingOO: " } + std::to_string(reinterpret_cast<uintptr_t>(addy))).c_str(),
-         "Insider", MB_ICONERROR);
-
-     if (error != JVMTI_ERROR_NONE) {
-         MessageBoxA(nullptr, (std::string{ "Failed to add capabilities. Error code: " } + std::to_string(error)).c_str(), "Insider", MB_ICONERROR);
-         serverPipe.sendStatus(2);
-
-         return 0;
-     }
+    // capabilities acts as a signature which allows us to force write advanced capabilities
+    jvmtiCapabilities capabilities{};
+    capabilities.can_tag_objects = 1;
+    capabilities.can_get_bytecodes = 1;
+    capabilities.can_get_synthetic_attribute = 1;
 
 
-     serverPipe.sendStatus(env.code);
-     serverPipe.startListen(env.jvmti, env.jni);
+    jvmtiCapabilities withAdvanced = capabilities;
+    withAdvanced.can_generate_breakpoint_events = 1;
+    withAdvanced.can_retransform_classes = 1;
+    withAdvanced.can_retransform_any_class = 1;
+    withAdvanced.can_generate_all_class_hook_events = 1;
+    withAdvanced.can_redefine_classes = 1;
+    withAdvanced.can_redefine_any_class = 1;
+    withAdvanced.can_suspend = 1;
 
-     return 0;
+
+
+    jvmtiError error = jvmti->AddCapabilities(&capabilities);
+    if (error != JVMTI_ERROR_NONE) {
+        MessageBoxA(nullptr, (std::string{ "Failed to add basic capabilities. Error code: " } + std::to_string(error)).c_str(), "Insider", MB_ICONERROR);
+        serverPipe.sendStatus(2);
+        return 0;
+    }
+
+
+    /* Force load capabilities with sig scan */
+    bool foundSig = false;
+    char curr[16];
+    std::memcpy(curr, &capabilities, 0x10);
+
+    constexpr int SIZE_TO_CHECK = 0x200;
+    char data[SIZE_TO_CHECK];
+    std::memcpy(data, (char*)jvmti, SIZE_TO_CHECK);
+
+    for (int i = 0; i < SIZE_TO_CHECK - 0x10; i++) {
+        if (std::memcmp(curr, data + i, 0x10) == 0) {
+            foundSig = true;
+            *((jvmtiCapabilities*)((char*)jvmti + i)) = withAdvanced;
+        }
+    }
+
+    if (!foundSig) {
+        MessageBoxA(nullptr, "Could not load advanced capabilities", "Insider", MB_ICONERROR);
+        serverPipe.sendStatus(2);
+        return 0;
+
+    }
+
+
+    /* setup callbacks */
+    jvmtiEventCallbacks callbacks;
+    memset(&callbacks, 0, sizeof(callbacks));
+    callbacks.Breakpoint = &breakpoint;
+    callbacks.ClassFileLoadHook = &loadHook;
+
+    jvmtiError err = jvmti->SetEventCallbacks(&callbacks, (jint)sizeof(callbacks));
+    if (err) {
+        MessageBoxA(nullptr, "Failed to set callbacks", "Insider", MB_ICONERROR);
+    }
+    jvmtiError breakpoint = jvmti->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_BREAKPOINT, NULL);
+    jvmtiError loadHook = jvmti->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL);
+
+
+    if (breakpoint || loadHook) {
+        MessageBoxA(nullptr, "Failed to set callbacks", "Insider", MB_ICONERROR);
+    }
+
+
+
+    /* start pipeline and listening */
+    serverPipe.sendStatus(env.code);
+    serverPipe.startListen(env.jvmti, env.jni);
+
+    return 0;
 }
 
 

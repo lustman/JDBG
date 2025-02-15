@@ -1,17 +1,14 @@
 package org.jdbg.core;
 
 
-import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.jdbg.core.attach.AttachManager;
-import org.jdbg.core.pipeline.impl.main.PipelineMain;
+import org.jdbg.core.pipeline.impl.PipelineMain;
 import org.jdbg.core.pipeline.response.FieldResponseData;
 import org.jdbg.core.pipeline.response.SubGraphData;
-import org.jdbg.core.util.Pair;
 import org.jdbg.gui.tabs.objectanalysis.objlist.TagItem;
 import org.jdbg.logger.Logger;
 
@@ -26,6 +23,10 @@ import java.util.Map;
 // the gui should interact with this only to achieve the goals
 public class CoreInterface {
     static CoreInterface instance;
+
+
+    Map<String, byte[]> classData = new HashMap<>();
+
     public boolean attach(int pid) {
         return AttachManager.getInstance().attach(pid);
     }
@@ -194,15 +195,21 @@ public class CoreInterface {
         return null;
     }
 
+
     public byte[] getClassData(String name) {
         if(!AttachManager.getInstance().isAttached())
             return new byte[0];
 
-
         name += '\0';
+
+        if(classData.containsKey(name)) {
+            Logger.log("Getting cached data");
+            return classData.get(name);
+        }
 
         PipelineMain.ClientResponse response = PipelineMain.getInstance().sendAndAwait(PipelineMain.ServerCommand.GET_CLASS_DATA, name.getBytes(StandardCharsets.UTF_8));
 
+        classData.put(name, response.response);
         return response.response;
     }
 

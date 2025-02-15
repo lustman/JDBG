@@ -182,6 +182,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\libs\Zydis.c" />
+    <ClCompile Include="breakpointhandler.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="handlerclassdata.cpp" />
     <ClCompile Include="handlerclassnames.cpp" />
@@ -198,6 +200,7 @@
     <ClCompile Include="pipeline.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="breakpointhandler.h" />
     <ClInclude Include="exprtk.hpp" />
     <ClInclude Include="handlerclearbreakpoint.h" />
     <ClInclude Include="handlergetreferences.h" />

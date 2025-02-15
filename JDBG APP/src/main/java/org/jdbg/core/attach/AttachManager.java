@@ -8,7 +8,7 @@ import com.sun.jna.platform.win32.*;
 import com.sun.jna.platform.win32.WinNT.HANDLE;
 import com.sun.jna.ptr.IntByReference;
 import org.jdbg.core.attach.breakpoint.BreakpointManager;
-import org.jdbg.core.pipeline.impl.main.PipelineMain;
+import org.jdbg.core.pipeline.impl.PipelineMain;
 import org.jdbg.gui.MainFrame;
 import org.jdbg.logger.Logger;
 
