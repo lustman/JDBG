@@ -109,9 +109,9 @@ public class AttachManager {
 
             byte[] bytes;
             if(is64Bit) {
-                bytes = getClass().getClassLoader().getResourceAsStream("assets/JDBG DLL_64.dll").readAllBytes();
+                bytes = getClass().getResourceAsStream("/assets/JDBG DLL_64.dll").readAllBytes();
             } else {
-                bytes = getClass().getClassLoader().getResourceAsStream("assets/JDBG DLL_32.dll").readAllBytes();
+                bytes = getClass().getResourceAsStream("/assets/JDBG DLL_32.dll").readAllBytes();
 
             }
             System.out.println(bytes.length);
@@ -164,7 +164,7 @@ public class AttachManager {
     Function get32BitLoadLibrary() {
         try {
 
-            byte[] bytes = getClass().getClassLoader().getResourceAsStream("assets/JDBG 32bit Helper.exe").readAllBytes();
+            byte[] bytes = getClass().getResourceAsStream("/assets/JDBG 32bit Helper.exe").readAllBytes();
             File file = File.createTempFile("32bithelper", ".exe");
             Files.write(file.getAbsoluteFile().toPath(), bytes);
             Process process = Runtime.getRuntime().exec(file.getAbsolutePath());

@@ -1,6 +1,7 @@
 package org.jdbg.gui.tabs.classanalysis.codepanel.comp;
 
 import org.fife.ui.rsyntaxtextarea.*;
+import org.jdbg.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +12,7 @@ public class CodeText extends RSyntaxTextArea {
     static {
         try {
             Font font = Font.createFont(Font.TRUETYPE_FONT,
-                    CodeText.class.getClassLoader().getResourceAsStream("assets/fonts/JetbrainsMonoNL-Regular.ttf"));
+                    Main.class.getResourceAsStream("/assets/fonts/JetBrainsMonoNL-Regular.ttf"));
 
             codeFont = font.deriveFont((float)(new JLabel().getFont().getSize()) + 2);
 
