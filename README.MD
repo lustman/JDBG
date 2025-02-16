@@ -42,7 +42,7 @@ To use JDBG, you must have a JVM running Java 17 or higher.
 
 You can download and run it in the releases tab of this project.
 
-## Building it yourself
+### Building it yourself
 
 The java client is built in Intellij while the dll is built in Visual Studio
 
