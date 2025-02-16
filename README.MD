@@ -42,7 +42,7 @@ To use JDBG, you must have a JVM running Java 17 or higher.
 
 You can download and run it in the releases tab of this project.
 
-### Building it yourself
+## Building it yourself
 
 The java client is built in Intellij while the dll is built in Visual Studio
 
@@ -55,7 +55,7 @@ Furthermore, you must build the JDBG 32bit Helper executable and add it to the a
 
 
 
-### Contributing
+## Contributing
 
 any and all contributions to this project would be greatly appreciated.
 Some examples of possible contributions include:
@@ -66,7 +66,7 @@ Some examples of possible contributions include:
 
 Thank you
 
-### Licensing
+## Licensing
 
 This project is licensed under the Apache-2.0 License. Furthermore, JDBG is intended only for educational and legal research purposes. It must not be used to circumvent copy protection, license verification, or other security mechanisms. The author is not responsible for any misuse of this tool. Users must comply with all applicable laws.
 
