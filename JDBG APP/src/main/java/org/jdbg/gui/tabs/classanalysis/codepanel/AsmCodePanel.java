@@ -1,5 +1,6 @@
 package org.jdbg.gui.tabs.classanalysis.codepanel;
 
+import org.fife.ui.rtextarea.Gutter;
 import org.fife.ui.rtextarea.IconRowEvent;
 import org.fife.ui.rtextarea.IconRowHeader;
 import org.fife.ui.rtextarea.IconRowListener;
@@ -14,22 +15,29 @@ import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class AsmCodePanel extends CodePanel {
 
-
-    Set<BreakpointManager.Breakpoint> breakpoints;
-    public AsmCodePanel(Set<BreakpointManager.Breakpoint> breakPoints) {
+    String parentClass;
+    int idx;
+    public AsmCodePanel( String parentClass, int idx) {
         super();
 
         scrollPane.setIconRowHeaderEnabled(true);
         scrollPane.getGutter().setIconRowHeaderInheritsGutterBackground(true);
         scrollPane.getGutter().setBookmarkingEnabled(true);
         scrollPane.getGutter().setBookmarkIcon(createBreakpointIcon());
-        scrollPane.getGutter().addIconRowListener(AttachManager.getInstance().getBreakpointManager());
-        this.breakpoints = breakPoints;
 
+
+        if(scrollPane.getGutter().getIconRowListenerCount()==0) {
+                scrollPane.getGutter().addIconRowListener(AttachManager.getInstance().getBreakpointManager());
+        }
+
+        this.parentClass = parentClass;
+        this.idx =idx;
 
     }
 
@@ -37,13 +45,27 @@ public class AsmCodePanel extends CodePanel {
     public void setText(String s) {
         super.setText(s);
 
+        Set<BreakpointManager.Breakpoint> breakpoints = AttachManager.getInstance().getBreakpointManager().getBreakpoints(parentClass);
+        List<Integer> toToggle = new ArrayList<>();
+
+        final int pass = idx;
         breakpoints.forEach((breakpoint) -> {
+            if(breakpoint.methodIdx == pass)
+                toToggle.add(breakpoint.line);
+        });
+
+        for(Integer i  : toToggle) {
             try {
-                scrollPane.getGutter().toggleBookmark(breakpoint.line);
-            } catch (BadLocationException e) {
+                scrollPane.getGutter().toggleBookmark(i);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        });
+        }
+
+    }
+
+    public Gutter getGutter() {
+        return scrollPane.getGutter();
     }
 
     /**

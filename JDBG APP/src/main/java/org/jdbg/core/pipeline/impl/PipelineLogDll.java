@@ -5,6 +5,8 @@ import org.jdbg.core.pipeline.Pipeline;
 import org.jdbg.gui.log.logs.impl.LogAgent;
 import org.jdbg.logger.Logger;
 
+import java.util.List;
+
 public class PipelineLogDll extends Pipeline {
 
     static PipelineLogDll instance;

@@ -1,9 +1,11 @@
 #include "pipeline.h"
 #include <windows.h>
-
+#include <string>
 
 ClientPipeline::ClientPipeline(const wchar_t* p) : path{ p } { 
-    connectPipe();
+    if (!connectPipe()) {
+
+    }
 }
 
 
@@ -20,7 +22,11 @@ bool ClientPipeline::connectPipe() {
         NULL
     );
 
+
     if (pipe == INVALID_HANDLE_VALUE) {
+        MessageBoxA(nullptr, std::to_string(GetLastError()).c_str(), "Pipe Error", MB_ICONERROR);
+        MessageBox(nullptr, path, L"Pipe Error", MB_ICONERROR);
+
         return false;
     }
 

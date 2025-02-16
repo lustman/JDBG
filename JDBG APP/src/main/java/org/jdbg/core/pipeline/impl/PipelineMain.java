@@ -51,8 +51,9 @@ public class PipelineMain extends Pipeline {
     }
 
     public DllStatus awaitAndCheckStatus() {
+        Logger.log("Awaiting main pipe connection");
         Kernel32.INSTANCE.ConnectNamedPipe(pipeHandle, null);
-        Logger.log("Client has connected to pipe");
+        Logger.log("Client has connected to main pipe");
 
         byte[] status = new byte[1];
         IntByReference bytesRead = new IntByReference(0);

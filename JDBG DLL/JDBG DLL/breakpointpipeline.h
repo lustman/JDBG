@@ -39,9 +39,13 @@ void JNICALL breakpoint(jvmtiEnv* jvmti_env,
 
 class BreakpointPipeline : public ClientPipeline {
 public:
-	static BreakpointPipeline instance;
 
 public:
 	BreakpointPipeline(const wchar_t* path);
 	void sendAndAwait(BreakpointResponse& response);
+
+	static BreakpointPipeline& getInstance() {
+		static BreakpointPipeline instance{ L"\\\\.\\pipe\\jdbg_breakpoint" };
+		return instance;
+	}
 };

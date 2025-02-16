@@ -80,7 +80,6 @@ EnvResult getEnv() {
 DWORD WINAPI start(LPVOID lpParam) {
     JdbgPipeline serverPipe{ L"\\\\.\\pipe\\jdbg" };
 
-    serverPipe.connectPipe();
     EnvResult env{ getEnv() };
 
     if (env.code != 0) {

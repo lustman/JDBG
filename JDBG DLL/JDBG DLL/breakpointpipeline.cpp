@@ -69,10 +69,8 @@ void JNICALL breakpoint(jvmtiEnv* jvmti,
 
 
 
-	BreakpointPipeline::instance.sendAndAwait(response);
+	BreakpointPipeline::getInstance().sendAndAwait(response);
 }
-
-BreakpointPipeline BreakpointPipeline::instance{ L"\\\\.\\pipe\\jdbg_breakpoint" };
 
 BreakpointPipeline::BreakpointPipeline(const wchar_t* p) : ClientPipeline{ p } {
 };
@@ -88,5 +86,9 @@ void BreakpointPipeline::sendAndAwait(BreakpointResponse& response) {
 	char buffer[1];
 	DWORD bytesRead;
 	if (!ReadFile(handle, buffer, 1, &bytesRead, NULL)) {
+		MessageBoxA(nullptr, std::to_string(GetLastError()).c_str(), "BreakpointPipeline", MB_ICONERROR);
 	}
+
+	MessageBoxA(nullptr, "Read", "Insider", MB_ICONERROR);
+
 }

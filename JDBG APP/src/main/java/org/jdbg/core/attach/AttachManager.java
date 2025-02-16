@@ -16,6 +16,10 @@ import org.jdbg.logger.Logger;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static com.sun.jna.platform.win32.WinNT.*;
 
@@ -61,8 +65,15 @@ public class AttachManager {
         }
         PipelineMain.getInstance().createPipe();
 
-        try {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
 
+        Future<PipelineMain.DllStatus> theStatus = executor.submit(() -> {
+            System.out.println("Hello");
+            return PipelineMain.getInstance().awaitAndCheckStatus();
+        });
+
+
+        try {
             HANDLE hProcess = Kernel32.INSTANCE.OpenProcess(WinNT.PROCESS_ALL_ACCESS, false, pid);
             IntByReference is64 = new IntByReference();
             Kernel32.INSTANCE.IsWow64Process(hProcess, is64);
@@ -87,14 +98,19 @@ public class AttachManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        PipelineMain.DllStatus status = PipelineMain.getInstance().awaitAndCheckStatus();
-        if(status == PipelineMain.DllStatus.SUCCESS) {
-            Logger.log("Successfully attached");
-            return true;
 
-        } else if(status== PipelineMain.DllStatus.FAIL) {
-            Logger.log("Failed to attach");
-            return false;
+        try {
+            PipelineMain.DllStatus status = theStatus.get();
+            if (status == PipelineMain.DllStatus.SUCCESS) {
+                Logger.log("Successfully attached");
+                return true;
+
+            } else if (status == PipelineMain.DllStatus.FAIL) {
+                Logger.log("Failed to attach");
+                return false;
+            }
+        } catch(ExecutionException|InterruptedException e) {
+            e.printStackTrace();
         }
         return false;
 

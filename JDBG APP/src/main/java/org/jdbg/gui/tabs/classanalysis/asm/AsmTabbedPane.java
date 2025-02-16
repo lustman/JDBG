@@ -1,5 +1,6 @@
 package org.jdbg.gui.tabs.classanalysis.asm;
 
+import org.fife.ui.rtextarea.GutterIconInfo;
 import org.jdbg.Util;
 import org.jdbg.core.attach.AttachManager;
 import org.jdbg.core.attach.breakpoint.BreakpointManager;
@@ -20,13 +21,12 @@ import org.objectweb.asm.util.TraceMethodVisitor;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class AsmTabbedPane extends ThinTabbedPane {
 
@@ -47,13 +47,15 @@ public class AsmTabbedPane extends ThinTabbedPane {
 
         for(BytecodeMethod method : b.getMethods()) {
 
-
-            CodePanel c = new AsmCodePanel(AttachManager.getInstance().getBreakpointManager().getBreakpoints(klass));
+            // such that breakpoint changes affect it.
+            AttachManager.getInstance().getBreakpointManager().setActiveMethod(method);
+            CodePanel c = new AsmCodePanel(klass, method.getIndex());
             c.setSyntax("java-bytecode");
             c.setText(method.getText());
             addTab(method.getName(), methodIcon, c);
             methodMap.put(c, method);
         }
+
 
         ChangeListener listener = new ChangeListener() {
 
@@ -81,6 +83,7 @@ public class AsmTabbedPane extends ThinTabbedPane {
         if(method==null) {
             return;
         }
+
 
         AttachManager.getInstance().getBreakpointManager().setActiveMethod(method);
     }
