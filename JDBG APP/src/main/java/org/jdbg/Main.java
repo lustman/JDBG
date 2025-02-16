@@ -46,20 +46,12 @@ public class Main {
 
                 PipelineMain.init();
                 PipelineLogDll.init();
-
-                //TODO make this better
-                Thread logDll = new Thread(() -> {
-                    PipelineLogDll.getInstance().start();
-                });
-                logDll.start();
-
-                PipelineBreakpoint breakpointPipeline = new PipelineBreakpoint();
-                Thread breakpointThread = new Thread(breakpointPipeline::start);
-                breakpointThread.start();
-
+                PipelineBreakpoint.init();
 
                 Thread shutdown = new Thread(() -> {
                     PipelineMain.getInstance().shutdown();
+                    PipelineLogDll.getInstance().shutdown();
+                    PipelineBreakpoint.getInstance().shutdown();
                 });
                 Runtime.getRuntime().addShutdownHook(shutdown);
             }

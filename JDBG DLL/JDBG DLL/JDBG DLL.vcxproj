@@ -93,7 +93,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>${SolutionDir}\libs;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include\win32;C:\Program Files\Java\jdk-1.8\include\win32;C:\Users\Roger Du\Documents\boost_1_87_0\boost_1_87_0;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libs;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include\win32;C:\Program Files\Java\jdk-1.8\include\win32;C:\Users\Roger Du\Documents\boost_1_87_0\boost_1_87_0;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -114,7 +114,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>${SolutionDir}\libs;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include\win32;C:\Program Files\Java\jdk-1.8\include\win32;C:\Users\Roger Du\Documents\boost_1_87_0\boost_1_87_0;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libs;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include\win32;C:\Program Files\Java\jdk-1.8\include\win32;C:\Users\Roger Du\Documents\boost_1_87_0\boost_1_87_0;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -136,7 +136,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\libs;C:\Program Files\Java\jdk-1.8\include;C:\Program Files\Java\jdk-1.8\include\win32;C:\Users\Roger Du\Documents\boost_1_87_0\boost_1_87_0;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libs;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include\win32;C:\Program Files\Java\jdk-1.8\include\win32;C:\Users\Roger Du\Documents\boost_1_87_0\boost_1_87_0;</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -164,7 +164,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\libs;C:\Program Files\Java\jdk-1.8\include;C:\Program Files\Java\jdk-1.8\include\win32;C:\Users\Roger Du\Documents\boost_1_87_0\boost_1_87_0;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libs;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include;C:\Program Files (x86)\OpenLogic\jdk-8.0.432.06-hotspot\include\win32;C:\Program Files\Java\jdk-1.8\include\win32;C:\Users\Roger Du\Documents\boost_1_87_0\boost_1_87_0;</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>

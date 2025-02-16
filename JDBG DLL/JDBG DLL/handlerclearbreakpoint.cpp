@@ -12,7 +12,7 @@ HandlerClearBreakpoint::HandlerClearBreakpoint(jvmtiEnv* jvmti, JNIEnv* jni, Jdb
 
 int HandlerClearBreakpoint::handle(char* data, DWORD length, char* responseBuffer, int& status, std::map<std::string, jclass>& klassMap) {
     int methodIdx = *((int*)data);
-    int offset = *((int*)data + sizeof(int));
+    int offset = *((int*)data + 1);
     char* klassName = data + 2 * sizeof(int);
 
     std::map<std::string, jclass>::const_iterator pos = klassMap.find(klassName);

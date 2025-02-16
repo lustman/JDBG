@@ -45,4 +45,8 @@ public class TabClasses extends JSplitPane {
         panel.getAsm().init(klassName, klass);
     }
 
+
+    public BreakpointBar getBreakpointBar() {
+        return bar;
+    }
 }

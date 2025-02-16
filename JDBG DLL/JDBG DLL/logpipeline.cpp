@@ -26,6 +26,8 @@ void LogPipeline::addMessage(const std::string& message, bool f) {
 
 void LogPipeline::flush() {
 	const char* c{ buffer.c_str() };
-	sendData(c, strlen(c));
+	if (!sendData(c, strlen(c))) {
+		CloseHandle(handle);
+	}
 	buffer.clear();
 }

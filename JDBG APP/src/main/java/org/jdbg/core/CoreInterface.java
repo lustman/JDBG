@@ -256,6 +256,26 @@ public class CoreInterface {
         return true;
     }
 
+    public boolean clearBreakpoint(String klassName, int methodIdx, int offset) {
+        klassName += '\0';
+        Logger.log("Clearing breakpoints for " + klassName + " @ " + methodIdx + " at offset " + offset);
+        byte[] msg = getBreakpointMessage(klassName, methodIdx, offset);
+
+        PipelineMain.ClientResponse response = PipelineMain.getInstance().sendAndAwait(PipelineMain.ServerCommand.CLEAR_BREAKPOINT,
+                msg);
+
+        if(response.response.length == 0) {
+            return false;
+        }
+
+        if(response.status != PipelineMain.ResponseStatus.OK) {
+            Logger.log("There was an error clearing breakpoint");
+            return false;
+        }
+
+        return true;
+    }
+
 
 
 

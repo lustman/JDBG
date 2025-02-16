@@ -206,7 +206,7 @@ int HandlerTagObjects::handle(char* data, DWORD length, char* responseBuffer, in
 
 	std::map<std::string, jclass>::const_iterator pos = klassMap.find(data);
 	if (pos == klassMap.end()) {
-		MessageBoxA(nullptr, "Class was not found", "Insider", MB_ICONERROR);
+		msgLog("Class was not found");
 		return 0;
 	}
 	jclass klass = pos->second;

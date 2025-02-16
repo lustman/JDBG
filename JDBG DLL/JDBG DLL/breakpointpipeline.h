@@ -19,6 +19,9 @@ struct LocalVariableElement {
 	char* signature;
 	char* name;
 	std::string value;
+
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(LocalVariableElement, signature, name, value);
+
 };
 
 struct BreakpointResponse {
@@ -26,8 +29,9 @@ struct BreakpointResponse {
 	char* methodName;
 	char* methodSignature;
 	std::vector<StackTraceElement> stackTrace;
+	std::vector<LocalVariableElement> localVars;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(BreakpointResponse, klassSignature, methodName, methodSignature, stackTrace);
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(BreakpointResponse, klassSignature, methodName, methodSignature, stackTrace, localVars);
 };
 
 void JNICALL breakpoint(jvmtiEnv* jvmti_env,
@@ -39,13 +43,18 @@ void JNICALL breakpoint(jvmtiEnv* jvmti_env,
 
 class BreakpointPipeline : public ClientPipeline {
 public:
-
+	std::map<std::string, jclass>* klassMap;
 public:
 	BreakpointPipeline(const wchar_t* path);
-	void sendAndAwait(BreakpointResponse& response);
+	void sendAndAwait(jvmtiEnv* jvmti, BreakpointResponse& response, jmethodID method, jlocation location);
 
 	static BreakpointPipeline& getInstance() {
 		static BreakpointPipeline instance{ L"\\\\.\\pipe\\jdbg_breakpoint" };
 		return instance;
+	}
+
+
+	void setKlassMap(std::map<std::string, jclass>* klassMap) {
+		this->klassMap = klassMap;
 	}
 };

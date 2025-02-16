@@ -1,32 +1,18 @@
 package org.jdbg.gui.tabs.classanalysis.asm;
 
-import org.fife.ui.rtextarea.GutterIconInfo;
-import org.jdbg.Util;
+import org.jdbg.MiscUtil;
 import org.jdbg.core.attach.AttachManager;
-import org.jdbg.core.attach.breakpoint.BreakpointManager;
 import org.jdbg.core.bytecode.asm.BytecodeMethod;
 import org.jdbg.core.bytecode.asm.Bytecoder;
 import org.jdbg.gui.tabs.classanalysis.codepanel.AsmCodePanel;
 import org.jdbg.gui.tabs.classanalysis.codepanel.CodePanel;
 import org.jdbg.gui.tabs.classanalysis.tabbed.ThinTabbedPane;
-import org.jdbg.logger.Logger;
-import org.objectweb.asm.*;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.util.Textifier;
-import org.objectweb.asm.util.TraceMethodVisitor;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.text.BadLocationException;
 import java.awt.*;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.*;
-import java.util.List;
 
 public class AsmTabbedPane extends ThinTabbedPane {
 
@@ -38,8 +24,8 @@ public class AsmTabbedPane extends ThinTabbedPane {
 
     public void init(String klass, byte[] bytes) {
         removeAll();
-        Icon fieldIcon = Util.getIcon("assets/icons/hexagon-letter-f.png", 15, 15);
-        Icon methodIcon = Util.getIcon("assets/icons/hexagon-letter-m.png", 15, 15);
+        Icon fieldIcon = MiscUtil.getIcon("assets/icons/hexagon-letter-f.png", 15, 15);
+        Icon methodIcon = MiscUtil.getIcon("assets/icons/hexagon-letter-m.png", 15, 15);
 
 
         Bytecoder b = new Bytecoder(klass, bytes);

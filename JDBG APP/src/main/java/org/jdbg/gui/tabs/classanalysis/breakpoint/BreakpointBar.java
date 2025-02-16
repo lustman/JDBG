@@ -1,11 +1,25 @@
 package org.jdbg.gui.tabs.classanalysis.breakpoint;
 
-import org.jdbg.Util;
+import org.jdbg.MiscUtil;
+import org.jdbg.core.pipeline.impl.PipelineBreakpoint;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class BreakpointBar extends JPanel {
+
+    boolean hit = false;
+
+    JButton playButton;
+
+    JTextPane breakpointsText;
+
+    JButton viewBreakpointInfoButton;
+
+    BreakpointInfoDialog dialog;
+
 
     public BreakpointBar() {
         int HEIGHT = 33;
@@ -17,12 +31,52 @@ public class BreakpointBar extends JPanel {
 
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        Icon icon = Util.getIcon("assets/icons/arrow-big-right-lines-deactivated.png", 16, 16);
-        add(new JTextArea("Breakpoints"));
+        breakpointsText = new JTextPane();
+        playButton = new JButton();
+        setNotHit();
 
-        JButton add = new JButton();
-        add.setIcon(icon);
-        add(add);
+        add(breakpointsText);
+        add(playButton);
         add(new JButton("Manage Breakpoints"));
+
+        playButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PipelineBreakpoint.getInstance().continueExecution();
+                setNotHit();
+            }
+        });
     }
+
+    void setNotHit() {
+        Icon icon = MiscUtil.getIcon("assets/icons/arrow-big-right-lines-deactivated.png", 16, 16);
+        breakpointsText.setText("Breakpoints");
+        playButton.setIcon(icon);
+        if(viewBreakpointInfoButton != null) {
+            viewBreakpointInfoButton.setVisible(false);
+        }
+    }
+
+    public void breakpointHit(PipelineBreakpoint.BreakpointResponse response) {
+        hit = true;
+
+        dialog = new BreakpointInfoDialog(response);
+        Icon icon = MiscUtil.getIcon("assets/icons/arrow-big-right-lines.png", 16, 16);
+        playButton.setIcon(icon);
+        breakpointsText.setText("Breakpoint Hit! : " + response.klassSignature + "#" + response.methodName);
+
+
+        viewBreakpointInfoButton = new JButton("View");
+        viewBreakpointInfoButton.setVisible(true);
+
+        viewBreakpointInfoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialog.setVisible(true);
+            }
+        });
+
+        add(viewBreakpointInfoButton);
+    }
+
 }

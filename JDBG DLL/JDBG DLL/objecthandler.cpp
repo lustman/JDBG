@@ -146,7 +146,7 @@ jint JNICALL referenceCallback(jvmtiHeapReferenceKind reference_kind,
 	int referrer_tag = *(referrer_tag_ptr);
 
 	if (referee_tag >= graph->size() || referrer_tag >= graph->size()) {
-		MessageBoxA(nullptr, "Insufficient Buffer Size", "Insider", MB_ICONERROR);
+		MessageBoxA(nullptr, "Insufficient Buffer Size", "JDBG @ referenceCallback", MB_ICONERROR);
 		return JVMTI_VISIT_ABORT;
 	}
 

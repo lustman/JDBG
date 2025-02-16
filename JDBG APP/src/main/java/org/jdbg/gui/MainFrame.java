@@ -1,6 +1,6 @@
 package org.jdbg.gui;
 
-import org.jdbg.Util;
+import org.jdbg.MiscUtil;
 import org.jdbg.gui.buttonbar.buttons.AttachProcessButton;
 import org.jdbg.gui.menubar.TopMenuBar;
 import org.jdbg.gui.log.LogPane;
@@ -8,7 +8,6 @@ import org.jdbg.logger.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.URL;
 
 public class MainFrame extends JFrame {
 
@@ -38,8 +37,8 @@ public class MainFrame extends JFrame {
 
     void initUI() {
         try {
-            Icon folderIcon = Util.getIcon("assets/icons/ic_fluent_folder_24_filled.png", 15, 15);
-            Icon coffeeIcon = Util.getIcon("assets/icons/ic_fluent_drink_coffee_24_filled.png", 15, 15);
+            Icon folderIcon = MiscUtil.getIcon("assets/icons/ic_fluent_folder_24_filled.png", 15, 15);
+            Icon coffeeIcon = MiscUtil.getIcon("assets/icons/ic_fluent_drink_coffee_24_filled.png", 15, 15);
             UIManager.put("Tree.closedIcon", folderIcon);
             UIManager.put("Tree.openIcon", folderIcon);
 
@@ -102,6 +101,11 @@ public class MainFrame extends JFrame {
     public void setAttached(String process) {
         text.setForeground(Color.GREEN);
         text.setText("Attached: " + process);
+    }
+
+    public void setUnattached() {
+        text.setText("Not attached");
+        text.setForeground(Color.RED);
     }
 
     public static MainFrame getInstance() {

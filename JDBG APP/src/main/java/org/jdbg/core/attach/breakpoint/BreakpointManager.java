@@ -81,6 +81,8 @@ public class BreakpointManager implements IconRowListener {
         Set<Breakpoint> breakpoints = breakpointMap.computeIfAbsent(activeMethod.getParentClass(), (k) -> new HashSet<>());
         int offset = activeMethod.getOffsets().get(iconRowEvent.getLine()-1);
         breakpoints.remove(new Breakpoint(activeMethod.getIndex(), offset, iconRowEvent.getLine()));
+
+        CoreInterface.getInstance().clearBreakpoint(activeMethod.getParentClass(), activeMethod.getIndex(), offset);
     }
 
     public void setActiveMethod(BytecodeMethod activeMethod) {

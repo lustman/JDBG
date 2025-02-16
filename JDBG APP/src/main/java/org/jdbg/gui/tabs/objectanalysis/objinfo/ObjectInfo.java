@@ -1,9 +1,6 @@
 package org.jdbg.gui.tabs.objectanalysis.objinfo;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
-import com.mxgraph.layout.mxCircleLayout;
-import com.mxgraph.layout.mxCompactTreeLayout;
-import com.mxgraph.layout.mxFastOrganicLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.swing.mxGraphComponent;
@@ -17,13 +14,12 @@ import org.jdbg.core.pipeline.response.SubGraphData;
 import org.jdbg.gui.tabs.objectanalysis.objinfo.graph.HeapEdge;
 import org.jdbg.gui.tabs.objectanalysis.objinfo.graph.HeapVertex;
 import org.jdbg.gui.tabs.objectanalysis.objlist.TagItem;
+import org.jdbg.gui.util.InfoBorder;
 import org.jgrapht.Graph;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,7 +33,7 @@ public class ObjectInfo extends JPanel {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBorder(new ObjInfoBorder(tagItem.toString()));
+        panel.setBorder(new InfoBorder(tagItem.toString()));
 
         if(fields.value==null) {
             panel.add(new ObjectStringInfo("Object Value: N/A"));
@@ -74,14 +70,13 @@ public class ObjectInfo extends JPanel {
             str[i][0]=data.getValue().signature;
             str[i][1]=data.getKey();
             str[i][2]=data.getValue().value;
-
             i++;
         }
 
         JTable table = new JTable(str, new String[] {"Signature", "Name", "Value"});
         JScrollPane scrollPane = new JScrollPane(table, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setBorder(new ObjInfoBorder("Fields"));
+        scrollPane.setBorder(new InfoBorder("Fields"));
 
         table.setFont(new Font(getFont().getName(), getFont().getStyle(), getFont().getSize()+4));
 
@@ -119,7 +114,7 @@ public class ObjectInfo extends JPanel {
         component.setPanning(true);
         component.setZoomPolicy(mxGraphComponent.ZOOM_POLICY_PAGE);
         //component.setMaximumSize(new Dimension(500, 700));
-        component.setBorder(new ObjInfoBorder("Heap Relationship"));
+        component.setBorder(new InfoBorder("Heap Relationship"));
         component.setConnectable(false);
         component.getGraph().setAllowDanglingEdges(false);
 

@@ -10,9 +10,6 @@
 #include "handlerclassdata.h"
 #include "breakpointpipeline.h"
 
-#define ZYDIS_EXPORT
-#include <Zydis.h>
-
 struct EnvResult {
     char code;
     jvmtiEnv* jvmti;
@@ -33,7 +30,7 @@ EnvResult getEnv() {
     HMODULE hJvm = GetModuleHandle(L"jvm.dll");
     
     if (hJvm == NULL) {
-        MessageBoxA(nullptr, "Failed to get jvm.dll handle", "Insider", MB_ICONERROR);
+        MessageBoxA(nullptr, "Failed to get jvm.dll handle", "JDBG @ getEnv", MB_ICONERROR);
         return EnvResult{ -1, nullptr,nullptr,nullptr };
 
     }
@@ -41,7 +38,7 @@ EnvResult getEnv() {
     // Get the address of the JNI_GetCreatedJavaVMs function
     JNI_GetCreatedJavaVMs_t JNI_GetCreatedJavaVMs = (JNI_GetCreatedJavaVMs_t)GetProcAddress(hJvm, "JNI_GetCreatedJavaVMs");
     if (JNI_GetCreatedJavaVMs == NULL) {
-        MessageBoxA(nullptr, "Failed to find JNI_GetCreatedJavaVMs function in jvm.dll", "Insider", MB_ICONERROR);
+        MessageBoxA(nullptr, "Failed to find JNI_GetCreatedJavaVMs function in jvm.dll", "JDBG @ getEnv", MB_ICONERROR);
         return EnvResult{ -1, nullptr,nullptr,nullptr };
 
     }
@@ -104,12 +101,13 @@ DWORD WINAPI start(LPVOID lpParam) {
     withAdvanced.can_redefine_classes = 1;
     withAdvanced.can_redefine_any_class = 1;
     withAdvanced.can_suspend = 1;
+    withAdvanced.can_access_local_variables = 1;
 
 
 
     jvmtiError error = jvmti->AddCapabilities(&capabilities);
     if (error != JVMTI_ERROR_NONE) {
-        MessageBoxA(nullptr, (std::string{ "Failed to add basic capabilities. Error code: " } + std::to_string(error)).c_str(), "Insider", MB_ICONERROR);
+        MessageBoxA(nullptr, (std::string{ "Failed to add basic capabilities. Error code: " } + std::to_string(error)).c_str(), "JDBG @ start", MB_ICONERROR);
         serverPipe.sendStatus(2);
         return 0;
     }
@@ -132,7 +130,7 @@ DWORD WINAPI start(LPVOID lpParam) {
     }
 
     if (!foundSig) {
-        MessageBoxA(nullptr, "Could not load advanced capabilities", "Insider", MB_ICONERROR);
+        MessageBoxA(nullptr, "Could not load advanced capabilities", "JDBG @ start", MB_ICONERROR);
         serverPipe.sendStatus(2);
         return 0;
 
@@ -147,14 +145,14 @@ DWORD WINAPI start(LPVOID lpParam) {
 
     jvmtiError err = jvmti->SetEventCallbacks(&callbacks, (jint)sizeof(callbacks));
     if (err) {
-        MessageBoxA(nullptr, "Failed to set callbacks", "Insider", MB_ICONERROR);
+        MessageBoxA(nullptr, "Failed to set callbacks", "JDBG @ start", MB_ICONERROR);
     }
     jvmtiError breakpoint = jvmti->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_BREAKPOINT, NULL);
     jvmtiError loadHook = jvmti->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL);
 
 
     if (breakpoint || loadHook) {
-        MessageBoxA(nullptr, "Failed to set callbacks", "Insider", MB_ICONERROR);
+        MessageBoxA(nullptr, "Failed to set callbacks", "JDBG @ start", MB_ICONERROR);
     }
 
 

@@ -1,10 +1,8 @@
 package org.jdbg.core.bytecode.asm;
 
-import org.jdbg.Util;
-import org.objectweb.asm.tree.AbstractInsnNode;
+import org.jdbg.MiscUtil;
 import org.objectweb.asm.tree.InsnList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BytecodeMethod {
@@ -39,7 +37,7 @@ public class BytecodeMethod {
     }
 
     public String getIdentifier() {
-        String s = Util.buildModifiers(modifiers);
+        String s = MiscUtil.buildModifiers(modifiers);
         s += " " + name + " : " + signature;
         return s;
     }

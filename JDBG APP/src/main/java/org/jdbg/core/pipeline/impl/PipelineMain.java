@@ -5,6 +5,8 @@ import com.sun.jna.ptr.IntByReference;
 import org.jdbg.core.pipeline.Pipeline;
 import org.jdbg.logger.Logger;
 
+import java.awt.image.Kernel;
+
 public class PipelineMain extends Pipeline {
     // rn NO_JVM is kinda useless, as if there is no jvm then the dll wont run as the functions wont link properly.
     // AttachManager#hasJVM is the solution
@@ -111,10 +113,6 @@ public class PipelineMain extends Pipeline {
         sendData(newBytes);
     }
 
-
-    public void shutdown() {
-        Kernel32.INSTANCE.CloseHandle(pipeHandle);
-    }
 
     public static PipelineMain getInstance() {
         return instance;

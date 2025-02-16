@@ -63,9 +63,11 @@ public class Pipeline {
         return response;
     }
 
-    public void close() {
+    public void shutdown() {
+        Kernel32.INSTANCE.DisconnectNamedPipe(pipeHandle);
         Kernel32.INSTANCE.CloseHandle(pipeHandle);
     }
+
 
 
 }

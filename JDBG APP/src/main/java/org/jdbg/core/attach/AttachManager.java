@@ -9,6 +9,7 @@ import com.sun.jna.platform.win32.WinNT.HANDLE;
 import com.sun.jna.ptr.IntByReference;
 import org.jdbg.core.attach.breakpoint.BreakpointManager;
 import org.jdbg.core.pipeline.impl.PipelineBreakpoint;
+import org.jdbg.core.pipeline.impl.PipelineLogDll;
 import org.jdbg.core.pipeline.impl.PipelineMain;
 import org.jdbg.gui.MainFrame;
 import org.jdbg.logger.Logger;
@@ -32,22 +33,48 @@ public class AttachManager {
 
     private BreakpointManager breakpointManager;
 
+    private Thread breakpointThread;
+
+    private Thread logThread;
+
     public AttachManager() {
         instance = this;
     }
 
     // TODO do cleanups
     public boolean deAttach(int pid) {
+        Logger.log("Waiting for threads to cease.");
+
+        PipelineLogDll.getInstance().cease();
+        PipelineBreakpoint.getInstance().continueExecution();
+        PipelineBreakpoint.getInstance().cease();
+        try {
+            breakpointThread.join();
+            logThread.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
         return false;
     }
     public boolean attach(int pid) {
-
-
+        if(attached) deAttach(currentPid);
 
         boolean processAttach = attachProcess(pid);
-        if(!processAttach) return false;
+        if(!processAttach) {
+            Logger.log("Failed to attach");
+            MainFrame.getInstance().setUnattached();
+            return false;
+        }
 
-        if(attached) deAttach(currentPid);
+        breakpointThread = new Thread(PipelineBreakpoint.getInstance());
+        breakpointThread.start();
+        logThread = new Thread(PipelineLogDll.getInstance());
+        logThread.start();
+
+
         currentPid = pid;
         MainFrame.getInstance().setAttached(String.valueOf(pid));
         attached = true;
@@ -63,12 +90,13 @@ public class AttachManager {
             Logger.log("Process has no jvm!");
             return false;
         }
+
+        // This re-creates it.
         PipelineMain.getInstance().createPipe();
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
         Future<PipelineMain.DllStatus> theStatus = executor.submit(() -> {
-            System.out.println("Hello");
             return PipelineMain.getInstance().awaitAndCheckStatus();
         });
 

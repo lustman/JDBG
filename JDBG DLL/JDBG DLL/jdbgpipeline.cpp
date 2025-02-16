@@ -17,6 +17,7 @@
 #include <map>
 #include <string>
 #include "logpipeline.h"
+#include "breakpointpipeline.h"
 
 
 std::map<std::string, jclass> klassMap;
@@ -49,7 +50,7 @@ void populateKlassMap(jvmtiEnv* jvmti) {
 			std::string n{ name };
 			std::string cleanedName{ n.substr(1, n.size() - 2) };
 
-			//MessageBoxA(nullptr, cleanedName.c_str(), "Insider", MB_ICONERROR);
+			//MessageBoxA(nullptr, cleanedName.c_str(), "JDBG", MB_ICONERROR);
 
 
 			
@@ -64,9 +65,10 @@ void populateKlassMap(jvmtiEnv* jvmti) {
 void JdbgPipeline::startListen(jvmtiEnv* jvmti, JNIEnv* jni) {
 
 	LogPipeline log{ L"\\\\.\\pipe\\jdbg_log" };
-
-
 	populateKlassMap(jvmti);
+
+	BreakpointPipeline::getInstance().setKlassMap(&klassMap);
+	
 
 
 	std::vector<std::unique_ptr<Handler>> handlers;
@@ -100,22 +102,22 @@ void JdbgPipeline::startListen(jvmtiEnv* jvmti, JNIEnv* jni) {
 		DWORD bytesRead{ 0 };
 
 		if (!ReadFile(handle, buffer, BUFFER_SIZE, &bytesRead, NULL)) {
+			CloseHandle(handle);
 			break;
 		}
 		if (bytesRead == 0) {
-			MessageBox(nullptr, L"Failed to read message", L"Insider", MB_ICONERROR);
+			MessageBoxA(nullptr, "Failed to read message", "JDBG @ startListen", MB_ICONERROR);
 			continue;
 		}
 
-		/*
+		
 		jint threadCount;
 		jthread* threads;
 		jvmti->GetAllThreads(&threadCount, &threads);
 
 		jthread currentThread;
 		if (jvmti->GetCurrentThread(&currentThread) != JVMTI_ERROR_NONE) {
-			MessageBox(nullptr, L"Failed to get current thread", L"Insider", MB_ICONERROR);
-
+			MessageBoxA(nullptr, "Failed to get current thread", "JDBG @ startListen", MB_ICONERROR);
 		}
 
 		for (int i = 0; i < threadCount; i++) {
@@ -123,13 +125,13 @@ void JdbgPipeline::startListen(jvmtiEnv* jvmti, JNIEnv* jni) {
 
 			if (!jni->IsSameObject(currentThread, thread)) {
 				if (jvmti->SuspendThread(thread) != JVMTI_ERROR_NONE) {
-					MessageBox(nullptr, L"Failed to suspend thread", L"Insider", MB_ICONERROR);
+					MessageBoxA(nullptr, "Failed to suspend thread", "JDBG @ startListen", MB_ICONERROR);
 
 				}
 
 			}
 		}
-		*/
+		
 
 		ServerCommand command = static_cast<ServerCommand>(buffer[0]);
 
@@ -147,19 +149,19 @@ void JdbgPipeline::startListen(jvmtiEnv* jvmti, JNIEnv* jni) {
 
 		log.flush();
 
-		/*
+		
 		for (int i = 0; i < threadCount; i++) {
 			jthread thread{ *(threads + i) };
 
 			if (!jni->IsSameObject(currentThread, thread)) {
 				if (jvmti->ResumeThread(thread) != JVMTI_ERROR_NONE) {
-					MessageBox(nullptr, L"Failed to resume thread", L"Insider", MB_ICONERROR);
+					MessageBoxA(nullptr, "Failed to resume thread", "JDBG @ startListen", MB_ICONERROR);
 
 				}
 			}
 
 		}
-		*/
+		
 
 
 		delete[] buffer;
