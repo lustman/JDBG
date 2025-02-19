@@ -18,8 +18,6 @@ public class BytecodeMethod {
 
     protected int modifiers;
 
-    private String identifier;
-
     private String parentClass;
 
     private int index;
@@ -32,7 +30,6 @@ public class BytecodeMethod {
         this.name = name;
         this.signature = signature;
         this.modifiers = modifiers;
-        this.identifier = getIdentifier();
         this.index = index;
     }
 
@@ -45,7 +42,7 @@ public class BytecodeMethod {
     public String getText() {
         StringBuilder text = new StringBuilder();
 
-        String s = identifier;
+        String s = getIdentifier();
         text.append(s);
         text.append("\n");
 

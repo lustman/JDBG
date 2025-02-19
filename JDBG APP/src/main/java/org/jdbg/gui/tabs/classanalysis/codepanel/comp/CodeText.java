@@ -13,10 +13,7 @@ public class CodeText extends RSyntaxTextArea {
         try {
             Font font = Font.createFont(Font.TRUETYPE_FONT,
                     Main.class.getResourceAsStream("/assets/fonts/JetBrainsMonoNL-Regular.ttf"));
-
             codeFont = font.deriveFont((float)(new JLabel().getFont().getSize()) + 2);
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }

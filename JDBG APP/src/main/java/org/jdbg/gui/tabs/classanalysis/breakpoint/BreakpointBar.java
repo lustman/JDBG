@@ -1,6 +1,7 @@
 package org.jdbg.gui.tabs.classanalysis.breakpoint;
 
 import org.jdbg.MiscUtil;
+import org.jdbg.core.attach.AttachManager;
 import org.jdbg.core.pipeline.impl.PipelineBreakpoint;
 
 import javax.swing.*;
@@ -18,7 +19,11 @@ public class BreakpointBar extends JPanel {
 
     JButton viewBreakpointInfoButton;
 
+    JButton manageBreakpoints;
+
     BreakpointInfoDialog dialog;
+
+    ManageBreakpointDialog manageDialog;
 
 
     public BreakpointBar() {
@@ -35,9 +40,21 @@ public class BreakpointBar extends JPanel {
         playButton = new JButton();
         setNotHit();
 
+        manageDialog = new ManageBreakpointDialog();
+
         add(breakpointsText);
         add(playButton);
-        add(new JButton("Manage Breakpoints"));
+
+        manageBreakpoints = new JButton("Manage Breakpoints");
+
+        manageBreakpoints.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                manageDialog.update(AttachManager.getInstance().getBreakpointManager().getBreakpoints());
+                manageDialog.setVisible(true);
+            }
+        });
+        add(manageBreakpoints);
 
         playButton.addActionListener(new ActionListener() {
             @Override

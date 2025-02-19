@@ -51,12 +51,6 @@ public class ObjectInfo extends JPanel {
         }
 
 
-
-
-
-
-
-
         panel.add(new ObjectStringInfo("Object Tag: " + tagItem.getTag()));
 
         panel.setMaximumSize(new Dimension(10000, 500));
@@ -77,8 +71,9 @@ public class ObjectInfo extends JPanel {
         JScrollPane scrollPane = new JScrollPane(table, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBorder(new InfoBorder("Fields"));
-
         table.setFont(new Font(getFont().getName(), getFont().getStyle(), getFont().getSize()+4));
+
+
 
         scrollPane.setPreferredSize(new Dimension(getWidth(), 100));
 

@@ -19,10 +19,13 @@ public class BreakpointManager implements IconRowListener {
 
         public int line;
 
-        public Breakpoint(int methodIdx, int offset, int line) {
+        public String identifier;
+
+        public Breakpoint(int methodIdx, int offset, int line, String identifier) {
             this.offset = offset;
             this.methodIdx = methodIdx;
             this.line = line;
+            this.identifier = identifier;
         }
 
         @Override
@@ -59,13 +62,13 @@ public class BreakpointManager implements IconRowListener {
     public void bookmarkAdded(IconRowEvent iconRowEvent) {
         Set<Breakpoint> breakpoints = breakpointMap.computeIfAbsent(activeMethod.getParentClass(), (k) -> new HashSet<>());
 
-        if(iconRowEvent.getLine()-1 >= activeMethod.getOffsets().size()) {
+        if(iconRowEvent.getLine()-1 >= activeMethod.getOffsets().size() || iconRowEvent.getLine()-1 < 0) {
             Logger.log("Breakpoint not valid.");
             return;
         }
         int offset =  activeMethod.getOffsets().get(iconRowEvent.getLine()-1);
 
-        Breakpoint b = new Breakpoint(activeMethod.getIndex(), offset, iconRowEvent.getLine());
+        Breakpoint b = new Breakpoint(activeMethod.getIndex(), offset, iconRowEvent.getLine(), activeMethod.getIdentifier());
 
 
         if(breakpoints.contains(b)) {
@@ -78,9 +81,15 @@ public class BreakpointManager implements IconRowListener {
 
     @Override
     public void bookmarkRemoved(IconRowEvent iconRowEvent) {
+        if(iconRowEvent.getLine()-1 >= activeMethod.getOffsets().size() || iconRowEvent.getLine()-1 < 0) {
+            Logger.log("Breakpoint not valid.");
+            return;
+        }
+
         Set<Breakpoint> breakpoints = breakpointMap.computeIfAbsent(activeMethod.getParentClass(), (k) -> new HashSet<>());
         int offset = activeMethod.getOffsets().get(iconRowEvent.getLine()-1);
-        breakpoints.remove(new Breakpoint(activeMethod.getIndex(), offset, iconRowEvent.getLine()));
+
+        breakpoints.remove(new Breakpoint(activeMethod.getIndex(), offset, iconRowEvent.getLine(), ""));
 
         CoreInterface.getInstance().clearBreakpoint(activeMethod.getParentClass(), activeMethod.getIndex(), offset);
     }
@@ -93,6 +102,11 @@ public class BreakpointManager implements IconRowListener {
     public Set<Breakpoint> getBreakpoints(String klass) {
 
         return breakpointMap.getOrDefault(klass, new HashSet<>());
+    }
+
+    public Map<String, Set<Breakpoint>> getBreakpoints() {
+
+        return breakpointMap;
     }
 
 

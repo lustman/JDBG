@@ -24,7 +24,6 @@ public class BreakpointInfoDialog extends JDialog {
         area.setEditable(false);
         area.setBorder(new InfoBorder("Breakpoint Origin"));
         add(area);
-
         area.setMaximumSize(new Dimension(10000, 200));
 
 
