@@ -4,11 +4,11 @@
 
 
 JDBG is a powerful Java debugger and reverse engineering tool that operates at runtime. It is attachable and is not limited by agent restrictions.
-<br>
-It leverages an injected DLL along with JNI and JVMTI to provide deep insight into Java applications.
 
 ![Bytecode Analysis](images/breakpoint.png)
 ![Heap Analysis](images/graph.png)
+
+JDBG leverages an injected DLL along with JNI and JVMTI to provide deep insight into Java applications.
 
 ## Features
 - Class Analysis
