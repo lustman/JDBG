@@ -3,7 +3,7 @@
 ![](https://img.shields.io/github/stars/roger1337/JDBG.svg) ![](https://img.shields.io/github/forks/roger1337/JDBG.svg) ![](https://img.shields.io/github/release/roger1337/JDBG.svg) ![](https://img.shields.io/github/issues/roger1337/JDBG.svg) 
 
 
-JDBG is a powerful attachable Java debugger and reverse engineering tool that operates at runtime. It is attachable and is not limited by agent restrictions.
+JDBG is a powerful Java debugger and reverse engineering tool that operates at runtime. It is attachable and is not limited by agent restrictions.
 <br>
 It leverages an injected DLL along with JNI and JVMTI to provide deep insight into Java applications.
 
