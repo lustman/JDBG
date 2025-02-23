@@ -50,7 +50,7 @@ public class ManageBreakpointDialog extends JDialog {
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBorder(new InfoBorder("Breakpoints"));
         add(scrollPane);
-        breakpointTable = scrollPane;
+        breakpointTable = scrollPane;   
         revalidate();
     }
 }
