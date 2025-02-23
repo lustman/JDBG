@@ -4,7 +4,7 @@
 
 JDBG is a powerful Java debugger and reverse engineering tool that operates at runtime. It is attachable and is not limited by agent restrictions.
 
-![Discord Banner 1](https://discord.com/api/guilds/1343030315194519685/widget.png?style=banner1)
+![Discord Banner 1](https://discord.com/api/guilds/1343030315194519685/widget.png?style=banner2)
 
 ![Bytecode Analysis](images/breakpoint.png)
 ![Heap Analysis](images/graph.png)
