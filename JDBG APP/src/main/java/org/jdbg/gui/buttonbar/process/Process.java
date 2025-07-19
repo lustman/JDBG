@@ -13,8 +13,7 @@ public class Process extends JButton {
 
     @Override
     public String toString() {
-        String hex = Integer.toHexString((int)id);
-        return "0".repeat(10 - hex.length()) + hex + "-" + processName;
+        return String.format("%5d - %s", id, processName);
     }
 
 
